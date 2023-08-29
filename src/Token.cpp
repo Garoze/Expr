@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <format>
 #include <iostream>
 #include <string>
 #include <variant>
@@ -34,11 +35,13 @@ auto Token::debug(bool debug) const -> void
 {
     if (debug)
     {
-        fmt::print("({} \"{}\" {} {} )\n", m_kind.as_string(),
-                   m_value.as_string(), m_location.line(), m_location.column());
+        std::cout << std::format("( {} \"{}\" {} {} )\n", m_kind.as_string(),
+                                 m_value.as_string(), m_location.line(),
+                                 m_location.column());
     }
     else
     {
-        fmt::print("( {} \"{}\" )\n", m_kind.as_string(), m_value.as_string());
+        std::cout << std::format("( {} \"{}\" )\n", m_kind.as_string(),
+                                 m_value.as_string());
     }
 }
