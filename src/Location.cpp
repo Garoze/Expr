@@ -1,6 +1,5 @@
+#include <format>
 #include <iostream>
-
-#include "fmt/core.h"
 
 #include "Lexer/Location.hpp"
 
@@ -20,5 +19,5 @@ auto Location::column() const -> std::size_t
 
 auto Location::as_string() const -> std::string
 {
-    return fmt::format("Line: {} Col: {}", m_line, m_column);
+    return std::format("Line: {} Col: {}", m_line, m_column);
 }

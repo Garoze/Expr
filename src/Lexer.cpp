@@ -1,12 +1,12 @@
 #include <cstddef>
 #include <cstdlib>
+#include <format>
 #include <iostream>
 #include <stack>
 #include <string>
 
 #include "Lexer/Lexer.hpp"
 #include "Lexer/Token.hpp"
-#include "fmt/core.h"
 
 Lexer::Lexer()
     : m_line(0)
@@ -118,8 +118,9 @@ auto Lexer::next_token() -> Token
 
             default:
                 step();
-                fmt::print("[Lexer] - Line: {} Column: {} Current: {}\n",
-                           m_line, m_index, c);
+                std::cout << std::format(
+                    "[Lexer] - Line: {} Column: {} Current: {}\n", m_line,
+                    m_index, c);
                 break;
         }
     }

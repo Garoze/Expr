@@ -4,8 +4,6 @@
 #include <string>
 #include <variant>
 
-#include "fmt/core.h"
-
 #include "Lexer/Kind.hpp"
 #include "Lexer/Location.hpp"
 #include "Lexer/Token.hpp"
