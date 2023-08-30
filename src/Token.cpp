@@ -8,6 +8,8 @@
 #include "Lexer/Location.hpp"
 #include "Lexer/Token.hpp"
 
+#include "Print.hpp"
+
 Token::Token(kind_t kind, value_t value, std::size_t line, std::size_t col)
     : m_kind(kind)
     , m_value(value)
@@ -33,13 +35,12 @@ auto Token::debug(bool debug) const -> void
 {
     if (debug)
     {
-        std::cout << std::format("( {} \"{}\" {} {} )\n", m_kind.as_string(),
-                                 m_value.as_string(), m_location.line(),
-                                 m_location.column());
+        expr::print("( {} \"{}\" {} {} )\n", m_kind.as_string(),
+                    m_value.as_string(), m_location.line(),
+                    m_location.column());
     }
     else
     {
-        std::cout << std::format("( {} \"{}\" )\n", m_kind.as_string(),
-                                 m_value.as_string());
+        expr::print("( {} \"{}\" )\n", m_kind.as_string(), m_value.as_string());
     }
 }
