@@ -95,7 +95,7 @@ auto Lexer::lex_numbers() -> Token
     return Token(kind_t::NUMBER, value, m_line, m_index);
 }
 
-auto Lexer::lex_literals() -> Token
+auto Lexer::lex_operators() -> Token
 {
     switch (char c = current_char())
     {
@@ -105,21 +105,41 @@ auto Lexer::lex_literals() -> Token
         case '*':
         case '^':
         case '%':
-        case '(':
-        case ')':
             step();
-            return Token(LITERAL_TO_KIND.at(c), std::string(1, c), m_line,
+            return Token(CHAR_TO_KIND.at(c), std::string(1, c), m_line,
                          m_index);
             break;
 
         default:
-            expr::print("Invalid Literal on Line: {} and Column: {} -> {}\n",
+            expr::print("Invalid Operator on Line: {} and Column: {} -> {}\n",
                         m_line, m_index, c);
             break;
     }
 
     // TODO: find a better way to deal with errors
-    return Token(kind_t::ERROR, "Invalid token from lex_literals", m_line,
+    return Token(kind_t::ERROR, "Invalid token from lex_operators", m_line,
+                 m_index);
+}
+
+auto Lexer::lex_separators() -> Token
+{
+    switch (char c = current_char())
+    {
+        case '(':
+        case ')':
+            step();
+            return Token(CHAR_TO_KIND.at(c), std::string(1, c), m_line,
+                         m_index);
+            break;
+
+        default:
+            expr::print("Invalid Separator on Line: {} and Column: {} -> {}\n",
+                        m_line, m_index, c);
+            break;
+    }
+
+    // TODO: find a better way to deal with errors
+    return Token(kind_t::ERROR, "Invalid token from lex_separators", m_line,
                  m_index);
 }
 
@@ -146,9 +166,12 @@ auto Lexer::next_token() -> Token
             case '/':
             case '^':
             case '%':
+                return lex_operators();
+                break;
+
             case '(':
             case ')':
-                return lex_literals();
+                return lex_separators();
                 break;
 
             default:

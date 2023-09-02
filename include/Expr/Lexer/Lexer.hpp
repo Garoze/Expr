@@ -26,7 +26,8 @@ private:
     auto push_token(Token) -> void;
 
     auto lex_numbers() -> Token;
-    auto lex_literals() -> Token;
+    auto lex_operators() -> Token;
+    auto lex_separators() -> Token;
 
 private:
     std::size_t m_line;
