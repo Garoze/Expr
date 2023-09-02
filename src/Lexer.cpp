@@ -1,3 +1,4 @@
+#include <cctype>
 #include <charconv>
 #include <cstddef>
 #include <cstdlib>
@@ -77,12 +78,12 @@ auto Lexer::push_token(Token t) -> void
     m_tokens.push_back(t);
 }
 
-// TODO: find a way to deal with float numbers
 auto Lexer::lex_numbers() -> Token
 {
     std::size_t start{ m_index };
 
-    while (!is_empty() && std::isdigit(current_char()))
+    while (!is_empty() &&
+           (std::isdigit(current_char()) || current_char() == '.'))
     {
         step();
     }
