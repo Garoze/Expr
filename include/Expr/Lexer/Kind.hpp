@@ -30,7 +30,7 @@ const std::unordered_map<kind_t, std::string> KIND_TO_STR = {
     { kind_t::ENDOFFILE, "EOF" },
 };
 
-const std::unordered_map<char, kind_t> LITERAL_TO_KIND = {
+const std::unordered_map<char, kind_t> CHAR_TO_KIND = {
     { '+', kind_t::ADDITION },       { '-', kind_t::SUBTRACTION },
     { '*', kind_t::MULTIPLICATION }, { '/', kind_t::DIVISION },
     { '%', kind_t::MODULUS },        { '^', kind_t::ADDITION },
