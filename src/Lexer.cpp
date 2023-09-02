@@ -34,20 +34,17 @@ auto Lexer::lex_line(std::string l) -> void
     m_index = 0;
 }
 
-auto Lexer::step() -> bool
+auto Lexer::step() -> void
 {
-    if ((m_index + 1) > m_source.length())
+    if ((m_index + 1) <= m_source.length())
     {
-        return false;
+        m_index++;
     }
-
-    m_index++;
-    return true;
 }
 
 auto Lexer::peek(std::size_t n = 0) const -> std::optional<char>
 {
-    if ((m_index + n) < m_source.length())
+    if ((m_index + n) <= m_source.length())
     {
         return m_source.at(m_index + n);
     }
@@ -90,7 +87,7 @@ auto Lexer::lex_numbers() -> Token
         step();
     }
 
-    int value;
+    double value;
     auto [_, err] = std::from_chars(m_source.data() + start,
                                     m_source.data() + m_index, value);
 

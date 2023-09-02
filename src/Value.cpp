@@ -22,7 +22,7 @@ auto Value::as_string() const -> std::string
         {
             return "";
         }
-        else if constexpr (std::is_same_v<T, int>)
+        else if constexpr (std::is_same_v<T, double>)
         {
             return std::to_string(arg);
         }

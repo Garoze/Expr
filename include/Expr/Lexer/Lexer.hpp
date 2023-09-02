@@ -20,7 +20,7 @@ public:
     [[nodiscard]] auto next_token() -> Token;
 
 private:
-    auto step() -> bool;
+    auto step() -> void;
     auto peek(std::size_t) const -> std::optional<char>;
     auto is_space() -> void;
     auto push_token(Token) -> void;
