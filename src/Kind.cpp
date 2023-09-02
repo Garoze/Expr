@@ -11,5 +11,5 @@ auto Kind::raw() const -> kind_t
 
 auto Kind::as_string() const -> std::string
 {
-    return KIND_STR.at(m_kind);
+    return KIND_TO_STR.at(m_kind);
 }
