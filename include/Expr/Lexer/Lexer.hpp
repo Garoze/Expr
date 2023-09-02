@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <stack>
 #include <string>
 #include <vector>
@@ -20,8 +21,12 @@ public:
 
 private:
     auto step() -> bool;
+    auto peek(std::size_t) const -> std::optional<char>;
     auto is_space() -> void;
     auto push_token(Token) -> void;
+
+    auto lex_numbers() -> Token;
+    auto lex_literals() -> Token;
 
 private:
     std::size_t m_line;
