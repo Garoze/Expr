@@ -1,9 +1,11 @@
+#include <charconv>
 #include <cstddef>
 #include <cstdlib>
 #include <format>
 #include <iostream>
 #include <stack>
 #include <string>
+#include <string_view>
 
 #include "Lexer/Kind.hpp"
 #include "Lexer/Lexer.hpp"
@@ -12,7 +14,7 @@
 #include "Print.hpp"
 
 Lexer::Lexer()
-    : m_line(0)
+    : m_line(1)
     , m_index(0)
 {}
 
@@ -78,69 +80,21 @@ auto Lexer::push_token(Token t) -> void
     m_tokens.push_back(t);
 }
 
-enum class State
-{
-    START,
-    LEX_NUMBERS,
-    FINISH,
-};
-
+// TODO: find a way to deal with float numbers
 auto Lexer::lex_numbers() -> Token
 {
-    State s = State::START;
+    std::size_t start{ m_index };
 
-    while (s != State::FINISH)
+    while (!is_empty() && std::isdigit(current_char()))
     {
-        switch (s)
-        {
-            case State::START: {
-                switch (char c = current_char())
-                {
-                    case '0' ... '9':
-                        s = State::LEX_NUMBERS;
-                        break;
-                    default:
-                        s = State::FINISH;
-                        break;
-                }
-            }
-            break;
-            case State::LEX_NUMBERS: {
-                switch (char c = current_char())
-                {
-                    case '0': {
-                        if (peek(1).value() == 'x')
-                        {
-                            expr::print("Lexing a hex number\n");
-                            // TODO: change the state to the lex_hex impl
-                            s = State::FINISH;
-                        }
-                    }
-                    case '1' ... '9':
-                        step();
-                        expr::print("Number: {}\n", c);
-                        break;
-                    default:
-                        s = State::FINISH;
-                        break;
-                }
-            }
-            break;
-
-            case State::FINISH:
-                s = State::FINISH;
-                break;
-
-            default:
-                break;
-        }
+        step();
     }
 
-    auto err =
-        std::format("[Lexer] - Invalid token with value: {}", current_char());
+    int value;
+    auto [_, err] = std::from_chars(m_source.data() + start,
+                                    m_source.data() + m_index, value);
 
-    // TODO: find a better way to deal with errors
-    return Token(kind_t::ERROR, err, m_line, m_index);
+    return Token(kind_t::NUMBER, value, m_line, m_index);
 }
 
 auto Lexer::lex_literals() -> Token
@@ -152,6 +106,9 @@ auto Lexer::lex_literals() -> Token
         case '/':
         case '*':
         case '^':
+        case '%':
+        case '(':
+        case ')':
             step();
             return Token(LITERAL_TO_KIND.at(c), std::string(1, c), m_line,
                          m_index);
@@ -190,15 +147,17 @@ auto Lexer::next_token() -> Token
             case '*':
             case '/':
             case '^':
+            case '%':
             case '(':
             case ')':
                 return lex_literals();
                 break;
 
             default:
-                step();
-                expr::print("[Lexer] - Line: {} Column: {} -> {}\n", m_line,
+                expr::print("[Lexer] - Line: {} Column: {} -> \"{}\"\n", m_line,
                             m_index, c);
+
+                step();
                 break;
         }
     }
