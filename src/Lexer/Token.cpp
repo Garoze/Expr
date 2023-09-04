@@ -53,3 +53,18 @@ auto Token::debug(bool debug) const -> void
         }
     }
 }
+
+auto Token::as_string() const -> std::string
+{
+    if (m_kind.raw() == kind_t::NUMBER)
+    {
+
+        return std::format("( {} \"{:.2f}\" )\n", m_kind.as_string(),
+                           std::get<double>(m_value.value()));
+    }
+    else
+    {
+        return std::format("( {} \"{}\" )\n", m_kind.as_string(),
+                           m_value.as_string());
+    }
+}
