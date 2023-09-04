@@ -1,10 +1,20 @@
 #include <algorithm>
+#include <cstdint>
 #include <tuple>
+#include <unordered_map>
 
 #include "Lexer/Kind.hpp"
 #include "Parser/Expression.hpp"
 #include "Parser/Parser.hpp"
 #include "Print.hpp"
+
+std::unordered_map<kind_t, Precedence> KIND_PRECEDENCE = {
+    { kind_t::ADDITION, Precedence::Term },
+    { kind_t::SUBTRACTION, Precedence::Term },
+    { kind_t::MULTIPLICATION, Precedence::Mult },
+    { kind_t::DIVISION, Precedence::Div },
+    { kind_t::POWER, Precedence::Power },
+};
 
 Parser::Parser()
     : m_index(0)
@@ -62,13 +72,50 @@ auto Parser::Parse() -> void
     }
 }
 
-auto Parser::parse_expression() -> Expression
+auto Parser::parse_expression(Precedence current_precedence) -> Expression
 {
-    return {};
+    Expression left = parse_prefix_expr();
+    auto op = look_ahead().value();
+    Precedence next_precedence = KIND_PRECEDENCE.at(look_ahead()->kind());
+
+    while (next_precedence != Precedence::Normal)
+    {
+        if (current_precedence >= next_precedence)
+        {
+            break;
+        }
+        else
+        {
+            step();
+            left = parse_infix_expr(op, left);
+            op = look_ahead().value();
+            next_precedence = KIND_PRECEDENCE.at(look_ahead()->kind());
+        }
+    }
+
+    return left;
 }
 
-auto Parser::parse_infix_expr() -> void
-{}
+auto Parser::parse_infix_expr(Token op, Expression left) -> Expression
+{
+    Expression expr;
+    AST_kind kind;
+
+    switch (op.kind())
+    {
+        case kind_t::ADDITION:
+        case kind_t::SUBTRACTION:
+        case kind_t::MULTIPLICATION:
+        case kind_t::DIVISION:
+        case kind_t::POWER:
+            break;
+
+        default:
+            break;
+    }
+
+    return {};
+}
 
 auto Parser::parse_number() -> NumberLiteral
 {
@@ -88,7 +135,7 @@ auto Parser::parse_prefix_expr() -> Expression
 
         case kind_t::OPENPAREN:
             step();
-            expr = parse_expression();
+            expr = parse_expression(Precedence::Normal);
             switch (look_ahead()->kind())
             {
                 case kind_t::OPENPAREN:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <cwchar>
 #include <optional>
 #include <vector>
@@ -9,6 +10,17 @@
 #include "Lexer/Token.hpp"
 #include "Parser/AST.hpp"
 #include "Parser/NumberLiteral.hpp"
+
+enum class Precedence : std::uint8_t
+{
+    Normal,
+    Term,
+    Mult,
+    Div,
+    Power,
+
+    _MAX,
+};
 
 class Parser
 {
@@ -25,8 +37,8 @@ private:
 
     auto look_ahead(std::size_t = 0) const -> std::optional<Token>;
 
-    auto parse_expression() -> Expression;
-    auto parse_infix_expr() -> void;
+    auto parse_expression(Precedence) -> Expression;
+    auto parse_infix_expr(Token, Expression) -> Expression;
     auto parse_prefix_expr() -> Expression;
 
     auto parse_number() -> NumberLiteral;
