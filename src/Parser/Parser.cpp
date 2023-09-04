@@ -1,6 +1,8 @@
 #include <algorithm>
+#include <tuple>
 
 #include "Lexer/Kind.hpp"
+#include "Parser/Expression.hpp"
 #include "Parser/Parser.hpp"
 #include "Print.hpp"
 
@@ -19,6 +21,16 @@ auto Parser::step() -> void
     {
         m_index++;
     }
+}
+
+auto Parser::chop() -> std::optional<Token>
+{
+    if ((m_index + 1) <= m_tokens.size())
+    {
+        return m_tokens.at(m_index++);
+    }
+
+    return {};
 }
 
 auto Parser::expect(kind_t kind) const -> bool
@@ -50,11 +62,48 @@ auto Parser::Parse() -> void
     }
 }
 
-auto Parser::parse_expression() -> void
-{}
+auto Parser::parse_expression() -> Expression
+{
+    return {};
+}
 
 auto Parser::parse_infix_expr() -> void
 {}
 
-auto Parser::parse_prefix_expr() -> void
-{}
+auto Parser::parse_number() -> NumberLiteral
+{
+    auto current = chop()->value();
+    return NumberLiteral(std::get<double>(current.value()));
+}
+
+auto Parser::parse_prefix_expr() -> Expression
+{
+    Expression expr;
+
+    switch (look_ahead()->kind())
+    {
+        case kind_t::NUMBER:
+            expr = parse_number();
+            break;
+
+        case kind_t::OPENPAREN:
+            step();
+            expr = parse_expression();
+            switch (look_ahead()->kind())
+            {
+                case kind_t::OPENPAREN:
+                    step();
+                    break;
+
+                default:
+                    expr::print("Something went wrong!\n");
+                    break;
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    return expr;
+}
