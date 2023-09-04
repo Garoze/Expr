@@ -3,6 +3,7 @@
 #include "Kind.hpp"
 #include "Location.hpp"
 #include "Value.hpp"
+#include <string>
 
 class Token
 {
@@ -12,6 +13,8 @@ public:
     [[nodiscard]] auto kind() const -> kind_t;
     [[nodiscard]] auto value() const -> Value;
     [[nodiscard]] auto location() const -> Location;
+
+    [[nodiscard]] auto as_string() const -> std::string;
 
     auto debug(bool = false) const -> void;
 
