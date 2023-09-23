@@ -3,6 +3,8 @@
 #include <tuple>
 #include <unordered_map>
 
+#include "fmt/core.h"
+
 #include "Lexer/Kind.hpp"
 #include "Parser/Parser.hpp"
 #include "Print.hpp"
@@ -56,8 +58,7 @@ auto Parser::Parse() -> void
         switch (look_ahead()->kind())
         {
             default:
-                expr::print("Unimplemented token {}",
-                            look_ahead()->as_string());
+                fmt::print("Unimplemented token {}", look_ahead()->as_string());
                 break;
         }
     }

@@ -8,11 +8,11 @@
 #include <string>
 #include <string_view>
 
+#include "fmt/core.h"
+
 #include "Lexer/Kind.hpp"
 #include "Lexer/Lexer.hpp"
 #include "Lexer/Token.hpp"
-
-#include "Print.hpp"
 
 Lexer::Lexer()
     : m_line(1)
@@ -111,8 +111,8 @@ auto Lexer::lex_operators() -> Token
             break;
 
         default:
-            expr::print("Invalid Operator on Line: {} and Column: {} -> {}\n",
-                        m_line, m_index, c);
+            fmt::print("Invalid Operator on Line: {} and Column: {} -> {}\n",
+                       m_line, m_index, c);
             break;
     }
 
@@ -133,8 +133,8 @@ auto Lexer::lex_separators() -> Token
             break;
 
         default:
-            expr::print("Invalid Separator on Line: {} and Column: {} -> {}\n",
-                        m_line, m_index, c);
+            fmt::print("Invalid Separator on Line: {} and Column: {} -> {}\n",
+                       m_line, m_index, c);
             break;
     }
 
@@ -175,8 +175,8 @@ auto Lexer::next_token() -> Token
                 break;
 
             default:
-                expr::print("[Lexer] - Line: {} Column: {} -> \"{}\"\n", m_line,
-                            m_index, c);
+                fmt::print("[Lexer] - Line: {} Column: {} -> \"{}\"\n", m_line,
+                           m_index, c);
 
                 step();
                 break;
