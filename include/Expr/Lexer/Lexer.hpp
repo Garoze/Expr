@@ -25,6 +25,8 @@ private:
     auto is_space() -> void;
     auto push_token(Token) -> void;
 
+    auto lex_base() -> double;
+
     auto lex_numbers() -> Token;
     auto lex_operators() -> Token;
     auto lex_separators() -> Token;

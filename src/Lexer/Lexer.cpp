@@ -4,9 +4,11 @@
 #include <cstdlib>
 #include <format>
 #include <iostream>
+#include <limits>
 #include <stack>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 
 #include "fmt/core.h"
 
@@ -25,7 +27,7 @@ auto Lexer::lex_line(std::string l) -> void
 
     while (auto token = next_token())
     {
-        if (token.kind() == kind_t::ENDOFFILE)
+        if (token.kind() == kind_t::__EOF)
             break;
 
         token.debug();
@@ -78,21 +80,87 @@ auto Lexer::push_token(Token t) -> void
     m_tokens.push_back(t);
 }
 
+std::unordered_map<char, int> char_to_digit = {
+    { '0', 0 },  { '1', 1 },  { '2', 2 },  { '3', 3 },  { '4', 4 },
+    { '5', 5 },  { '6', 6 },  { '7', 7 },  { '8', 8 },  { '9', 9 },
+    { 'a', 10 }, { 'b', 11 }, { 'c', 12 }, { 'd', 13 }, { 'e', 14 },
+    { 'f', 15 }, { 'A', 10 }, { 'B', 11 }, { 'C', 12 }, { 'D', 13 },
+    { 'E', 14 }, { 'F', 15 },
+};
+
+auto Lexer::lex_base() -> double
+{
+    double base{ 10 };
+
+    switch (current_char())
+    {
+        case '0':
+            step();
+            switch (current_char())
+            {
+                case 'x':
+                    step();
+                    base = 16;
+                    break;
+                case 'b':
+                    step();
+                    base = 2;
+                    break;
+                default:
+                    base = 8;
+                    break;
+            }
+            break;
+    }
+
+    return base;
+}
+
 auto Lexer::lex_numbers() -> Token
 {
-    std::size_t start{ m_index };
+    double value{ 0 };
+    double base = lex_base();
 
     while (!is_empty() &&
-           (std::isdigit(current_char()) || current_char() == '.'))
+           (std::isdigit(current_char()) || std::isxdigit(current_char())))
     {
+        double digit = char_to_digit.at(current_char());
+
+        if (digit == 0 && is_empty())
+        {
+            break;
+        }
+
+        if (digit >= base)
+        {
+            auto err = fmt::format(
+                "Syntax error -> Digit '{}' out of range for base {}\n", digit,
+                base);
+
+            return Token(kind_t::TOKEN_ERROR, err, m_line, m_index);
+            digit = 0;
+        }
+
+        if (value > (std::numeric_limits<double>::max() / base))
+        {
+            auto err =
+                fmt::format("Syntax error -> Integer literal overflow\n");
+
+            return Token(kind_t::TOKEN_ERROR, err, m_line, m_index);
+
+            while (isdigit(current_char()))
+            {
+                step();
+            }
+            value = 0;
+            break;
+        }
+
+        value = (value * base) + digit;
         step();
     }
 
-    double value;
-    auto [_, err] = std::from_chars(m_source.data() + start,
-                                    m_source.data() + m_index, value);
-
-    return Token(kind_t::NUMBER, value, m_line, m_index);
+    return Token(kind_t::TOKEN_NUMBER, value, m_line, m_index);
 }
 
 auto Lexer::lex_operators() -> Token
@@ -106,8 +174,7 @@ auto Lexer::lex_operators() -> Token
         case '^':
         case '%':
             step();
-            return Token(CHAR_TO_KIND.at(c), std::string(1, c), m_line,
-                         m_index);
+            return Token(c, {}, m_line, m_index);
             break;
 
         default:
@@ -117,8 +184,8 @@ auto Lexer::lex_operators() -> Token
     }
 
     // TODO: find a better way to deal with errors
-    return Token(kind_t::ERROR, "Invalid token from lex_operators", m_line,
-                 m_index);
+    return Token(kind_t::TOKEN_ERROR, "Invalid token from lex_operators",
+                 m_line, m_index);
 }
 
 auto Lexer::lex_separators() -> Token
@@ -128,8 +195,7 @@ auto Lexer::lex_separators() -> Token
         case '(':
         case ')':
             step();
-            return Token(CHAR_TO_KIND.at(c), std::string(1, c), m_line,
-                         m_index);
+            return Token(c, {}, m_line, m_index);
             break;
 
         default:
@@ -139,8 +205,8 @@ auto Lexer::lex_separators() -> Token
     }
 
     // TODO: find a better way to deal with errors
-    return Token(kind_t::ERROR, "Invalid token from lex_separators", m_line,
-                 m_index);
+    return Token(kind_t::TOKEN_ERROR, "Invalid token from lex_separators",
+                 m_line, m_index);
 }
 
 auto Lexer::next_token() -> Token
@@ -183,5 +249,5 @@ auto Lexer::next_token() -> Token
         }
     }
 
-    return Token(kind_t::ENDOFFILE, {}, m_line, m_index);
+    return Token(kind_t::__EOF, {}, m_line, m_index);
 }
