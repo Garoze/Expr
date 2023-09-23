@@ -8,7 +8,7 @@ Value::Value(value_t value)
     : m_value(value)
 {}
 
-auto Value::value() const -> value_t
+auto Value::raw() const -> value_t
 {
     return m_value;
 }

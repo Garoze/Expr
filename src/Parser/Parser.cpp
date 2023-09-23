@@ -120,7 +120,7 @@ auto Parser::parse_infix_expr(Token op, Expression left) -> Expression
 auto Parser::parse_number() -> NumberLiteral
 {
     auto current = chop()->value();
-    return NumberLiteral(std::get<double>(current.value()));
+    return NumberLiteral(std::get<double>(current.raw()));
 }
 
 auto Parser::parse_prefix_expr() -> Expression

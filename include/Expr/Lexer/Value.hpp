@@ -11,7 +11,7 @@ class Value
 public:
     Value(value_t);
 
-    [[nodiscard]] auto value() const -> value_t;
+    [[nodiscard]] auto raw() const -> value_t;
     [[nodiscard]] auto as_string() const -> std::string;
 
 public:
