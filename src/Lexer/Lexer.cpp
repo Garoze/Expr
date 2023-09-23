@@ -30,9 +30,9 @@ auto Lexer::sanitize_input(std::string s) -> std::string
     return s;
 }
 
-auto Lexer::lex_line(std::string l) -> void
+auto Lexer::lex_line(std::string line) -> void
 {
-    m_source = sanitize_input(l);
+    m_source = sanitize_input(line);
 
     while (auto token = next_token())
     {

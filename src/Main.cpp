@@ -15,6 +15,10 @@ int main()
     {
         fmt::print("> ");
         std::getline(std::cin, input);
+
+        if (input == "q" || input == "quit")
+            break;
+
         l.lex_line(input);
         input = "";
     }
