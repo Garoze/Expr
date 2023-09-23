@@ -7,7 +7,6 @@
 
 #include "Lexer/Kind.hpp"
 #include "Parser/Parser.hpp"
-#include "Print.hpp"
 
 Parser::Parser()
     : m_index(0)
@@ -53,7 +52,7 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
 
 auto Parser::Parse() -> void
 {
-    while (look_ahead()->kind() != kind_t::ENDOFFILE)
+    while (look_ahead()->kind() != kind_t::__EOF)
     {
         switch (look_ahead()->kind())
         {
