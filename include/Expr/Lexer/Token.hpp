@@ -1,13 +1,15 @@
 #pragma once
 
+#include <string>
+
 #include "Kind.hpp"
 #include "Location.hpp"
 #include "Value.hpp"
-#include <string>
 
 class Token
 {
 public:
+    Token(char, value_t, std::size_t, std::size_t);
     Token(kind_t, value_t, std::size_t, std::size_t);
 
     [[nodiscard]] auto kind() const -> kind_t;

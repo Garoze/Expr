@@ -10,6 +10,12 @@
 
 #include "fmt/core.h"
 
+Token::Token(char kind, value_t value, std::size_t line, std::size_t col)
+    : m_kind(kind)
+    , m_value(value)
+    , m_location(line, col)
+{}
+
 Token::Token(kind_t kind, value_t value, std::size_t line, std::size_t col)
     : m_kind(kind)
     , m_value(value)
@@ -35,27 +41,43 @@ auto Token::debug(bool debug) const -> void
 {
     if (debug)
     {
-        fmt::print("( {} \"{}\" {} {} )\n", m_kind.as_string(),
-                   m_value.as_string(), m_location.line(), m_location.column());
+        if (m_value.as_string().size() <= 1)
+        {
+            fmt::print("( \"{}\" {} {} )\n", m_value.as_string(),
+                       m_location.line(), m_location.column());
+        }
+        else
+        {
+            fmt::print("( {} \"{}\" {} {} )\n", m_kind.as_string(),
+                       m_value.as_string(), m_location.line(),
+                       m_location.column());
+        }
     }
     else
     {
-        if (m_kind.raw() == kind_t::NUMBER)
+        if (m_kind.raw() == kind_t::TOKEN_NUMBER)
         {
             fmt::print("( {} \"{:.2f}\" )\n", m_kind.as_string(),
                        std::get<double>(m_value.raw()));
         }
         else
         {
-            fmt::print("( {} \"{}\" )\n", m_kind.as_string(),
-                       m_value.as_string());
+            if (m_value.as_string().size() < 1)
+            {
+                fmt::print("( {} )\n", m_kind.as_string());
+            }
+            else
+            {
+                fmt::print("( {} \"{}\" )\n", m_kind.as_string(),
+                           m_value.as_string());
+            }
         }
     }
 }
 
 auto Token::as_string() const -> std::string
 {
-    if (m_kind.raw() == kind_t::NUMBER)
+    if (m_kind.raw() == kind_t::TOKEN_NUMBER)
     {
 
         return fmt::format("( {} \"{:.2f}\" )\n", m_kind.as_string(),
