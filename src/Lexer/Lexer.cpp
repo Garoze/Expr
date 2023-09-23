@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cctype>
 #include <charconv>
 #include <cstddef>
@@ -21,9 +22,17 @@ Lexer::Lexer()
     , m_index(0)
 {}
 
+auto Lexer::sanitize_input(std::string s) -> std::string
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](auto c) { return std::tolower(c); });
+
+    return s;
+}
+
 auto Lexer::lex_line(std::string l) -> void
 {
-    m_source = l;
+    m_source = sanitize_input(l);
 
     while (auto token = next_token())
     {
@@ -81,11 +90,10 @@ auto Lexer::push_token(Token t) -> void
 }
 
 std::unordered_map<char, int> char_to_digit = {
-    { '0', 0 },  { '1', 1 },  { '2', 2 },  { '3', 3 },  { '4', 4 },
-    { '5', 5 },  { '6', 6 },  { '7', 7 },  { '8', 8 },  { '9', 9 },
-    { 'a', 10 }, { 'b', 11 }, { 'c', 12 }, { 'd', 13 }, { 'e', 14 },
-    { 'f', 15 }, { 'A', 10 }, { 'B', 11 }, { 'C', 12 }, { 'D', 13 },
-    { 'E', 14 }, { 'F', 15 },
+    { '0', 0 },  { '1', 1 },  { '2', 2 },  { '3', 3 },
+    { '4', 4 },  { '5', 5 },  { '6', 6 },  { '7', 7 },
+    { '8', 8 },  { '9', 9 },  { 'a', 10 }, { 'b', 11 },
+    { 'c', 12 }, { 'd', 13 }, { 'e', 14 }, { 'f', 15 },
 };
 
 auto Lexer::lex_base() -> double

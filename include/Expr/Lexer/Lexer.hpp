@@ -19,6 +19,8 @@ public:
     [[nodiscard]] auto current_char() const -> char;
     [[nodiscard]] auto next_token() -> Token;
 
+    [[nodiscard]] auto sanitize_input(std::string) -> std::string;
+
 private:
     auto step() -> void;
     auto peek(std::size_t) const -> std::optional<char>;
