@@ -1,7 +1,4 @@
 add_library(Parser
-  Expression.cpp
-  NumberLiteral.cpp
-  BinaryOperation.cpp
   Parser.cpp
 )
 

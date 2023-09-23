@@ -44,7 +44,7 @@ auto Token::debug(bool debug) const -> void
         if (m_kind.raw() == kind_t::NUMBER)
         {
             expr::print("( {} \"{:.2f}\" )\n", m_kind.as_string(),
-                        std::get<double>(m_value.value()));
+                        std::get<double>(m_value.raw()));
         }
         else
         {
@@ -60,7 +60,7 @@ auto Token::as_string() const -> std::string
     {
 
         return std::format("( {} \"{:.2f}\" )\n", m_kind.as_string(),
-                           std::get<double>(m_value.value()));
+                           std::get<double>(m_value.raw()));
     }
     else
     {
