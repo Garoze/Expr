@@ -2,17 +2,18 @@
 #include <string>
 
 #include "Lexer/Lexer.hpp"
+#include "fmt/core.h"
 
 int main()
 {
     Lexer l;
 
-    std::cout << "Basic expression evaluator\n";
+    fmt::print("Basic expression evaluator!\n");
 
     std::string input;
     for (;;)
     {
-        std::cout << "> ";
+        fmt::print("> ");
         std::getline(std::cin, input);
         l.lex_line(input);
         input = "";
