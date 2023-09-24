@@ -3,9 +3,10 @@ if(BUILD_TESTING)
 
   target_link_libraries(
     initial_test
-    Lexer
     GTest::gtest_main
   )
+
+  target_link_libraries(initial_test Lexer)
 
   include(GoogleTest)
   gtest_discover_tests(initial_test)
