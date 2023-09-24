@@ -22,6 +22,8 @@ private:
     auto chop() -> std::optional<Token>;
     auto expect(kind_t) const -> bool;
 
+    auto on_range(std::size_t) const -> bool;
+
     auto look_ahead(std::size_t = 0) const -> std::optional<Token>;
 
 private:

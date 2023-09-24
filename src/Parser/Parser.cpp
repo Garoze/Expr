@@ -17,9 +17,14 @@ Parser::Parser(std::vector<Token>& tokens)
     , m_tokens(std::move(tokens))
 {}
 
+auto Parser::on_range(std::size_t count = 0) const -> bool
+{
+    return ((m_index + count) <= m_tokens.size());
+}
+
 auto Parser::step() -> void
 {
-    if ((m_index + 1) <= m_tokens.size())
+    if (on_range(1))
     {
         m_index++;
     }
@@ -27,7 +32,7 @@ auto Parser::step() -> void
 
 auto Parser::chop() -> std::optional<Token>
 {
-    if ((m_index + 1) <= m_tokens.size())
+    if (on_range(1))
     {
         return m_tokens.at(m_index++);
     }
@@ -42,7 +47,7 @@ auto Parser::expect(kind_t kind) const -> bool
 
 auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
 {
-    if ((m_index + pos) <= m_tokens.size())
+    if (on_range(pos))
     {
         return m_tokens.at(m_index);
     }
