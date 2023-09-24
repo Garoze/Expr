@@ -12,7 +12,7 @@ class Lexer
 public:
     Lexer();
 
-    auto lex_line(std::string) -> void;
+    auto lex_line(std::string, bool = false) -> std::vector<Token>;
 
 public:
     [[nodiscard]] auto is_empty() const -> bool;

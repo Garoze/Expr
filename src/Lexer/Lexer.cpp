@@ -10,6 +10,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <vector>
 
 #include "fmt/core.h"
 
@@ -31,20 +32,29 @@ auto Lexer::sanitize_input(std::string s) -> std::string
     return s;
 }
 
-auto Lexer::lex_line(std::string line) -> void
+auto Lexer::lex_line(std::string line, bool debug) -> std::vector<Token>
 {
+    std::vector<Token> tokens;
+
     m_source = sanitize_input(line);
 
     while (auto token = next_token())
     {
+        tokens.push_back(token);
+
+        if (debug && token.kind() != kind_t::__EOF)
+        {
+            token.debug();
+        }
+
         if (token.kind() == kind_t::__EOF)
             break;
-
-        token.debug();
     }
 
     m_source = "";
     m_index = 0;
+
+    return tokens;
 }
 
 auto Lexer::step() -> void
