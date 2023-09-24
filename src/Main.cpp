@@ -19,7 +19,7 @@ int main()
         if (input == "q" || input == "quit")
             break;
 
-        l.lex_line(input);
+        l.lex_line(input, true);
         input = "";
     }
 
