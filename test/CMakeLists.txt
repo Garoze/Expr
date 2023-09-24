@@ -1,8 +1,9 @@
 if(BUILD_TESTING)
-  add_executable(initial_test expr_test.cpp)
+  add_executable(initial_test lexer_test.cpp)
 
   target_link_libraries(
     initial_test
+    Lexer
     GTest::gtest_main
   )
 
