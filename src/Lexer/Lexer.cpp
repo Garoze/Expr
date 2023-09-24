@@ -24,8 +24,9 @@ Lexer::Lexer()
 
 auto Lexer::sanitize_input(std::string s) -> std::string
 {
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](auto c) { return std::tolower(c); });
+    std::transform(
+        s.begin(), s.end(), s.begin(),
+        [](unsigned char c) -> unsigned char { return std::toupper(c); });
 
     return s;
 }
@@ -191,7 +192,6 @@ auto Lexer::lex_operators() -> Token
             break;
     }
 
-    // TODO: find a better way to deal with errors
     return Token(kind_t::TOKEN_ERROR, "Invalid token from lex_operators",
                  m_line, m_index);
 }
@@ -212,7 +212,6 @@ auto Lexer::lex_separators() -> Token
             break;
     }
 
-    // TODO: find a better way to deal with errors
     return Token(kind_t::TOKEN_ERROR, "Invalid token from lex_separators",
                  m_line, m_index);
 }
