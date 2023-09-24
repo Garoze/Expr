@@ -9,6 +9,13 @@
 #include "Lexer/Kind.hpp"
 #include "Lexer/Token.hpp"
 
+enum class Precendence
+{
+    prec0,
+    prec1,
+    __count,
+};
+
 class Parser
 {
 public:
@@ -16,6 +23,9 @@ public:
     Parser(std::vector<Token>&);
 
     auto Parse() -> void;
+
+    auto parse_expr(Precendence = Precendence::prec0) -> void;
+    auto parse_primary() -> void;
 
 private:
     auto step() -> void;

@@ -1,4 +1,8 @@
 add_library(Parser
+  Node.cpp
+  Expression.cpp
+  NumberLiteral.cpp
+  BinaryExpression.cpp
   Parser.cpp
 )
 

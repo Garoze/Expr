@@ -1,9 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 
-enum class kind_t
+enum class kind_t : std::uint8_t
 {
     __EOF = 0,
     __LAST_VALID_CHAR = 127, // Reserve first 128 values for one-char tokens
