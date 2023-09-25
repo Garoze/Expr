@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "Lexer/Lexer.hpp"
 #include "fmt/core.h"
+
+#include "Lexer/Lexer.hpp"
+#include "Parser/Parser.hpp"
 
 int main()
 {
@@ -19,8 +21,11 @@ int main()
         if (input == "q" || input == "quit")
             break;
 
-        l.lex_line(input, true);
+        auto tokens = l.lex_line(input, true);
         input = "";
+
+        Parser p(tokens);
+        p.Parse();
     }
 
     return EXIT_SUCCESS;

@@ -13,7 +13,7 @@ namespace test {
 auto expect_token(std::vector<Token>& tokens, std::size_t index, kind_t kind)
     -> bool
 {
-    return tokens.at(index).kind() == kind;
+    return tokens.at(index).raw_kind() == kind;
 }
 
 } // namespace test

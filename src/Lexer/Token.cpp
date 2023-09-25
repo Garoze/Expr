@@ -22,7 +22,12 @@ Token::Token(kind_t kind, value_t value, std::size_t line, std::size_t col)
     , m_location(line, col)
 {}
 
-auto Token::kind() const -> kind_t
+auto Token::kind() const -> const Kind&
+{
+    return m_kind;
+}
+
+auto Token::raw_kind() const -> kind_t
 {
     return m_kind.raw();
 }

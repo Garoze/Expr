@@ -16,6 +16,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 
+set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -Wall -Werror -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -Wall -DNDEBUG")
+
 add_subdirectory(src)
 add_subdirectory(external)
 

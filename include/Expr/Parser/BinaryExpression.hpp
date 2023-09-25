@@ -2,10 +2,10 @@
 
 #include "Parser/Expression.hpp"
 
-class BinaryExpr : public Expression
+class BinaryExpression : public Expression
 {
 public:
-    BinaryExpr(Expression, Expression, std::string);
+    BinaryExpression(Expression, Expression, std::string);
 
 private:
     Expression m_lhs;

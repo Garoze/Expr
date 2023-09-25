@@ -9,11 +9,6 @@ enum class AST_kind
     BinaryExpression,
 };
 
-std::unordered_map<AST_kind, std::string> KIND_NAMES = {
-    { AST_kind::NumberLiteral, "NumberLiteral" },
-    { AST_kind::BinaryExpression, "BinaryExpression" },
-};
-
 class Node
 {
 public:

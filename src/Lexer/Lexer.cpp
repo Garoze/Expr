@@ -42,12 +42,12 @@ auto Lexer::lex_line(std::string line, bool debug) -> std::vector<Token>
     {
         tokens.push_back(token);
 
-        if (debug && token.kind() != kind_t::__EOF)
+        if (debug && token.kind().raw() != kind_t::__EOF)
         {
             token.debug();
         }
 
-        if (token.kind() == kind_t::__EOF)
+        if (token.kind().raw() == kind_t::__EOF)
             break;
     }
 
@@ -239,7 +239,16 @@ auto Lexer::next_token() -> Token
                 is_space();
                 break;
 
-            case '0' ... '9':
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
                 return lex_numbers();
                 break;
 

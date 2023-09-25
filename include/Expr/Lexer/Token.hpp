@@ -12,7 +12,8 @@ public:
     Token(char, value_t, std::size_t, std::size_t);
     Token(kind_t, value_t, std::size_t, std::size_t);
 
-    [[nodiscard]] auto kind() const -> kind_t;
+    [[nodiscard]] auto kind() const -> const Kind&;
+    [[nodiscard]] auto raw_kind() const -> kind_t;
     [[nodiscard]] auto value() const -> Value;
     [[nodiscard]] auto location() const -> Location;
 
