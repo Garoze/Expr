@@ -63,7 +63,7 @@ auto Parser::Parse() -> void
     parse_expr();
 }
 
-// E -> T { + | - T } +
+// Expr -> Term { + | - Term }+
 auto Parser::parse_expr() -> Expression
 {
     fmt::print("Parsing an expression -> current: {}",
@@ -83,7 +83,7 @@ auto Parser::parse_expr() -> Expression
     return lhs;
 }
 
-// T -> F * T | F / T | F
+// Term -> Factor * Term | Factor / Term | Factor
 auto Parser::parse_term() -> Expression
 {
     fmt::print("Parsing an term -> current: {}", look_ahead()->as_string());
@@ -102,7 +102,7 @@ auto Parser::parse_term() -> Expression
     return lhs;
 }
 
-// F -> NUMBERLIT
+// Factor -> NUMBERLIT
 auto Parser::parse_factor() -> Expression
 {
     fmt::print("Parsing an factor -> current: {}", look_ahead()->as_string());
