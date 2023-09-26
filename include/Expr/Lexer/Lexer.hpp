@@ -14,7 +14,7 @@ public:
 
     auto lex_line(std::string, bool = false) -> std::vector<Token>;
 
-public:
+private:
     [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto current_char() const -> char;
     [[nodiscard]] auto next_token() -> Token;
@@ -23,15 +23,16 @@ public:
 
 private:
     auto step() -> void;
-    auto peek(std::size_t) const -> std::optional<char>;
     auto is_space() -> void;
     auto push_token(Token) -> void;
 
-    auto lex_base() -> double;
+    [[nodiscard]] auto peek(std::size_t) const -> std::optional<char>;
 
-    auto lex_numbers() -> Token;
-    auto lex_operators() -> Token;
-    auto lex_separators() -> Token;
+private:
+    [[nodiscard]] auto lex_base() -> double;
+    [[nodiscard]] auto lex_numbers() -> Token;
+    [[nodiscard]] auto lex_operators() -> Token;
+    [[nodiscard]] auto lex_separators() -> Token;
 
 private:
     std::size_t m_line;

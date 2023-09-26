@@ -13,7 +13,7 @@ namespace test {
 auto expect_token(std::vector<Token>& tokens, std::size_t index, kind_t kind)
     -> bool
 {
-    return tokens.at(index).raw_kind() == kind;
+    return tokens.at(index).kind().raw() == kind;
 }
 
 } // namespace test
@@ -48,9 +48,9 @@ TEST(LexerTest, ItShouldReturnRightTokens)
 
     auto tokens = l.lex_line(input);
 
-    ASSERT_EQ(test::expect_token(tokens, 0, kind_t::TOKEN_NUMBER), true);
-    ASSERT_EQ(test::expect_token(tokens, 1, static_cast<kind_t>('+')), true);
-    ASSERT_EQ(test::expect_token(tokens, 2, kind_t::TOKEN_NUMBER), true);
+    ASSERT_EQ(test::expect_token(tokens, 0, kind_t::NUMBERLIT), true);
+    ASSERT_EQ(test::expect_token(tokens, 1, kind_t::PLUS), true);
+    ASSERT_EQ(test::expect_token(tokens, 2, kind_t::NUMBERLIT), true);
 }
 
 int main(int argc, char** argv)

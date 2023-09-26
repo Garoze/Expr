@@ -156,7 +156,7 @@ auto Lexer::lex_numbers() -> Token
                 "Syntax error -> Digit '{}' out of range for base {}\n", digit,
                 base);
 
-            return Token(kind_t::TOKEN_ERROR, err, m_line, m_index);
+            return Token(kind_t::ERROR, err, m_line, m_index);
             digit = 0;
         }
 
@@ -165,7 +165,7 @@ auto Lexer::lex_numbers() -> Token
             auto err =
                 fmt::format("Syntax error -> Integer literal overflow\n");
 
-            return Token(kind_t::TOKEN_ERROR, err, m_line, m_index);
+            return Token(kind_t::ERROR, err, m_line, m_index);
 
             while (isdigit(current_char()))
             {
@@ -179,7 +179,28 @@ auto Lexer::lex_numbers() -> Token
         step();
     }
 
-    return Token(kind_t::TOKEN_NUMBER, value, m_line, m_index);
+    return Token(kind_t::NUMBERLIT, value, m_line, m_index);
+}
+
+auto Lexer::lex_separators() -> Token
+{
+    switch (char c = current_char())
+    {
+        case '(':
+        case ')':
+            step();
+            return Token(char_to_kind.at(c), std::string(1, c), m_line,
+                         m_index);
+            break;
+
+        default:
+            fmt::print("Invalid Separator on Line: {} and Column: {} -> {}\n",
+                       m_line, m_index, c);
+            break;
+    }
+
+    return Token(kind_t::ERROR, "Invalid token from lex_separators", m_line,
+                 m_index);
 }
 
 auto Lexer::lex_operators() -> Token
@@ -190,10 +211,11 @@ auto Lexer::lex_operators() -> Token
         case '-':
         case '/':
         case '*':
-        case '^':
         case '%':
+        case '^':
             step();
-            return Token(c, {}, m_line, m_index);
+            return Token(char_to_kind.at(c), std::string(1, c), m_line,
+                         m_index);
             break;
 
         default:
@@ -202,28 +224,8 @@ auto Lexer::lex_operators() -> Token
             break;
     }
 
-    return Token(kind_t::TOKEN_ERROR, "Invalid token from lex_operators",
-                 m_line, m_index);
-}
-
-auto Lexer::lex_separators() -> Token
-{
-    switch (char c = current_char())
-    {
-        case '(':
-        case ')':
-            step();
-            return Token(c, {}, m_line, m_index);
-            break;
-
-        default:
-            fmt::print("Invalid Separator on Line: {} and Column: {} -> {}\n",
-                       m_line, m_index, c);
-            break;
-    }
-
-    return Token(kind_t::TOKEN_ERROR, "Invalid token from lex_separators",
-                 m_line, m_index);
+    return Token(kind_t::ERROR, "Invalid token from lex_operators", m_line,
+                 m_index);
 }
 
 auto Lexer::next_token() -> Token
@@ -252,18 +254,18 @@ auto Lexer::next_token() -> Token
                 return lex_numbers();
                 break;
 
-            case '+':
-            case '-':
-            case '*':
-            case '/':
-            case '^':
-            case '%':
-                return lex_operators();
-                break;
-
             case '(':
             case ')':
                 return lex_separators();
+                break;
+
+            case '+':
+            case '-':
+            case '/':
+            case '*':
+            case '%':
+            case '^':
+                return lex_operators();
                 break;
 
             default:

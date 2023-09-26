@@ -42,11 +42,6 @@ auto Parser::chop() -> std::optional<Token>
     return {};
 }
 
-auto Parser::expect(char c) -> bool
-{
-    return m_tokens.at(m_index).kind().as_int() == c;
-}
-
 auto Parser::expect(kind_t kind) const -> bool
 {
     return m_tokens.at(m_index).kind().raw() == kind;
@@ -87,19 +82,10 @@ auto Parser::parse_primary() -> Expression
 {
     if (auto token = look_ahead().value())
     {
-        switch (token.kind().as_int())
+        switch (token.kind().raw())
         {
-            case '(':
-            {
-                auto expr = parse_expr();
-                step();
-                expect(')');
-                return expr;
-            }
-            break;
-
-            case ')':
-                fmt::print("No primary expression starts with ')'\n");
+            default:
+                fmt::print("Unimplemented\n");
                 break;
         }
     }

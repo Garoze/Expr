@@ -22,6 +22,12 @@ enum class kind_t
     ERROR,
 };
 
+const std::unordered_map<char, kind_t> char_to_kind = {
+    { '(', kind_t::LPAREN },     { ')', kind_t::RPAREN }, { '+', kind_t::PLUS },
+    { '-', kind_t::MINUS },      { '/', kind_t::SLASH },  { '*', kind_t::STAR },
+    { '%', kind_t::PERCENTAGE }, { '^', kind_t::CARROT },
+};
+
 class Kind
 {
 public:

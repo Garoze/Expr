@@ -10,12 +10,6 @@
 
 #include "fmt/core.h"
 
-Token::Token(char kind, value_t value, std::size_t line, std::size_t col)
-    : m_kind(kind)
-    , m_value(value)
-    , m_location(line, col)
-{}
-
 Token::Token(kind_t kind, value_t value, std::size_t line, std::size_t col)
     : m_kind(kind)
     , m_value(value)
@@ -27,11 +21,6 @@ auto Token::kind() const -> const Kind&
     return m_kind;
 }
 
-auto Token::raw_kind() const -> kind_t
-{
-    return m_kind.raw();
-}
-
 auto Token::value() const -> Value
 {
     return m_value;
@@ -40,6 +29,21 @@ auto Token::value() const -> Value
 auto Token::location() const -> Location
 {
     return m_location;
+}
+
+auto Token::as_string() const -> std::string
+{
+    if (m_kind.raw() == kind_t::NUMBERLIT)
+    {
+
+        return fmt::format("( {} \"{:.2f}\" )\n", m_kind.as_string(),
+                           std::get<double>(m_value.raw()));
+    }
+    else
+    {
+        return fmt::format("( {} \"{}\" )\n", m_kind.as_string(),
+                           m_value.as_string());
+    }
 }
 
 auto Token::debug(bool debug) const -> void
@@ -60,7 +64,7 @@ auto Token::debug(bool debug) const -> void
     }
     else
     {
-        if (m_kind.raw() == kind_t::TOKEN_NUMBER)
+        if (m_kind.raw() == kind_t::NUMBERLIT)
         {
             fmt::print("( {} \"{:.2f}\" )\n", m_kind.as_string(),
                        std::get<double>(m_value.raw()));
@@ -77,20 +81,5 @@ auto Token::debug(bool debug) const -> void
                            m_value.as_string());
             }
         }
-    }
-}
-
-auto Token::as_string() const -> std::string
-{
-    if (m_kind.raw() == kind_t::TOKEN_NUMBER)
-    {
-
-        return fmt::format("( {} \"{:.2f}\" )\n", m_kind.as_string(),
-                           std::get<double>(m_value.raw()));
-    }
-    else
-    {
-        return fmt::format("( {} \"{}\" )\n", m_kind.as_string(),
-                           m_value.as_string());
     }
 }
