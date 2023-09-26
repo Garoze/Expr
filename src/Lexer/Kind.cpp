@@ -17,10 +17,6 @@ const std::unordered_map<kind_t, std::string> kind_as_string = {
     { kind_t::ERROR, "Error" },
 };
 
-Kind::Kind(char kind)
-    : m_kind(static_cast<kind_t>(kind))
-{}
-
 Kind::Kind(kind_t kind)
     : m_kind(kind)
 {}

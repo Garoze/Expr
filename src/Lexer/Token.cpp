@@ -36,12 +36,12 @@ auto Token::as_string() const -> std::string
     if (m_kind.raw() == kind_t::NUMBERLIT)
     {
 
-        return fmt::format("( {} \"{:.2f}\" )\n", m_kind.as_string(),
+        return fmt::format("( {} \"{:.2f}\" )", m_kind.as_string(),
                            std::get<double>(m_value.raw()));
     }
     else
     {
-        return fmt::format("( {} \"{}\" )\n", m_kind.as_string(),
+        return fmt::format("( {} \"{}\" )", m_kind.as_string(),
                            m_value.as_string());
     }
 }

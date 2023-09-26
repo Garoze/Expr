@@ -31,7 +31,6 @@ const std::unordered_map<char, kind_t> char_to_kind = {
 class Kind
 {
 public:
-    Kind(char);
     Kind(kind_t);
 
     [[nodiscard]] auto raw() const -> kind_t;

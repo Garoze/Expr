@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <cstdint>
-#include <tuple>
 #include <unordered_map>
 
 #include "fmt/core.h"
@@ -66,7 +65,7 @@ auto Parser::Parse() -> void
 // Expr -> Term { + | - Term }+
 auto Parser::parse_expr() -> Expression
 {
-    fmt::print("Parsing an expression -> current: {}",
+    fmt::print("Parsing an expression -> current: {}\n",
                look_ahead()->as_string());
     auto lhs = parse_term();
 
@@ -86,7 +85,7 @@ auto Parser::parse_expr() -> Expression
 // Term -> Factor * Term | Factor / Term | Factor
 auto Parser::parse_term() -> Expression
 {
-    fmt::print("Parsing an term -> current: {}", look_ahead()->as_string());
+    fmt::print("Parsing an term -> current: {}\n", look_ahead()->as_string());
     auto lhs = parse_factor();
 
     while (look_ahead()->kind().raw() == kind_t::STAR ||
@@ -105,7 +104,7 @@ auto Parser::parse_term() -> Expression
 // Factor -> NUMBERLIT
 auto Parser::parse_factor() -> Expression
 {
-    fmt::print("Parsing an factor -> current: {}", look_ahead()->as_string());
+    fmt::print("Parsing an factor -> current: {}\n", look_ahead()->as_string());
     if (!expect(kind_t::NUMBERLIT))
     {
         fmt::print("Expected a NumberLiteral and got {}\n",
