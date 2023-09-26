@@ -79,7 +79,7 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
         step();
         auto rhs = parse_term();
 
-        return std::make_unique<BinaryExpression>(
+        lhs = std::make_unique<BinaryExpression>(
             std::move(lhs), std::move(rhs),
             std::get<std::string>(op.value().raw()));
     }
@@ -99,8 +99,9 @@ auto Parser::parse_term() -> std::unique_ptr<Expression>
         step();
         auto rhs = parse_term();
 
-        return std::make_unique<BinaryExpression>(
-            std::move(lhs), std::move(rhs), op.as_string());
+        lhs = std::make_unique<BinaryExpression>(
+            std::move(lhs), std::move(rhs),
+            std::get<std::string>(op.value().raw()));
     }
 
     return lhs;
