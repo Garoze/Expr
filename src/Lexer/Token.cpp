@@ -4,11 +4,11 @@
 #include <string>
 #include <variant>
 
+#include "fmt/core.h"
+
 #include "Lexer/Kind.hpp"
 #include "Lexer/Location.hpp"
 #include "Lexer/Token.hpp"
-
-#include "fmt/core.h"
 
 Token::Token(kind_t kind, value_t value, std::size_t line, std::size_t col)
     : m_kind(kind)
