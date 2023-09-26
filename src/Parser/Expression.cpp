@@ -7,3 +7,6 @@ Expression::Expression()
 Expression::Expression(AST_kind kind)
     : Node{ kind }
 {}
+
+auto Expression::visit(Visitor&) -> void
+{}

@@ -4,3 +4,13 @@ NumberLiteral::NumberLiteral(double value)
     : Expression{ AST_kind::NumberLiteral }
     , m_value(value)
 {}
+
+auto NumberLiteral::value() const -> double
+{
+    return m_value;
+}
+
+auto NumberLiteral::visit(Visitor& visitor) -> void
+{
+    visitor.visit(*this);
+}

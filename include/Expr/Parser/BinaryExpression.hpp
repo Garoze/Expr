@@ -10,6 +10,12 @@ public:
     BinaryExpression(std::unique_ptr<Expression>, std::unique_ptr<Expression>,
                      std::string);
 
+    auto lhs() const -> Expression*;
+    auto rhs() const -> Expression*;
+    auto op() const -> std::string;
+
+    auto visit(Visitor& visitor) -> void override;
+
 private:
     std::unique_ptr<Expression> m_lhs;
     std::unique_ptr<Expression> m_rhs;

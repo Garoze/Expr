@@ -10,3 +10,21 @@ BinaryExpression::BinaryExpression(std::unique_ptr<Expression> lhs,
     , m_rhs(std::move(rhs))
     , m_op(op)
 {}
+
+auto BinaryExpression::lhs() const -> Expression*
+{
+    return m_lhs.get();
+}
+
+auto BinaryExpression::rhs() const -> Expression*
+{
+    return m_rhs.get();
+}
+
+auto BinaryExpression::op() const -> std::string
+{
+    return m_op;
+}
+
+auto BinaryExpression::visit(Visitor&) -> void
+{}

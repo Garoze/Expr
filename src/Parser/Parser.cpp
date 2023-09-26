@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "Parser/Visitor.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
@@ -60,14 +61,14 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
 
 auto Parser::Parse() -> void
 {
-    parse_expr();
+    Printer p;
+    auto expr = parse_expr();
+    expr->visit(p);
 }
 
 // Expr -> Term { + | - Term }+
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
 {
-    fmt::print("Parsing an expression -> current: {}\n",
-               look_ahead()->as_string());
     auto lhs = parse_term();
 
     while (look_ahead()->kind().raw() == kind_t::PLUS ||
@@ -87,7 +88,6 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
 // Term -> Factor * Term | Factor / Term | Factor
 auto Parser::parse_term() -> std::unique_ptr<Expression>
 {
-    fmt::print("Parsing an term -> current: {}\n", look_ahead()->as_string());
     auto lhs = parse_factor();
 
     while (look_ahead()->kind().raw() == kind_t::STAR ||
@@ -107,7 +107,6 @@ auto Parser::parse_term() -> std::unique_ptr<Expression>
 // Factor -> NUMBERLIT
 auto Parser::parse_factor() -> std::unique_ptr<Expression>
 {
-    fmt::print("Parsing an factor -> current: {}\n", look_ahead()->as_string());
     if (!expect(kind_t::NUMBERLIT))
     {
         fmt::print("Expected a NumberLiteral and got {}\n",
