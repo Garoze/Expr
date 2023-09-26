@@ -21,7 +21,7 @@ int main()
         if (input == "q" || input == "quit")
             break;
 
-        auto tokens = l.lex_line(input, true);
+        auto tokens = l.lex_line(input, false);
         input = "";
 
         Parser p(tokens);

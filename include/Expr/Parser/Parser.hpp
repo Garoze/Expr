@@ -26,8 +26,9 @@ public:
 
     auto Parse() -> void;
 
-    auto parse_expr(Precendence = Precendence::prec0) -> Expression;
-    auto parse_primary() -> Expression;
+    auto parse_expr() -> Expression;
+    auto parse_term() -> Expression;
+    auto parse_factor() -> Expression;
 
 private:
     auto step() -> void;

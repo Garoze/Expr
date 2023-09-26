@@ -27,7 +27,7 @@ auto Lexer::sanitize_input(std::string s) -> std::string
 {
     std::transform(
         s.begin(), s.end(), s.begin(),
-        [](unsigned char c) -> unsigned char { return std::toupper(c); });
+        [](unsigned char c) -> unsigned char { return std::tolower(c); });
 
     return s;
 }

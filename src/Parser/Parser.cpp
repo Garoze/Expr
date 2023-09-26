@@ -3,6 +3,7 @@
 #include <tuple>
 #include <unordered_map>
 
+#include "Parser/NumberLiteral.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
@@ -57,20 +58,24 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
     return {};
 }
 
-auto Parser::parse_expr(Precendence p) -> Expression
+auto Parser::Parse() -> void
 {
-    if (p > Precendence::__count)
+    parse_expr();
+}
+
+// E -> T { + | - T } +
+auto Parser::parse_expr() -> Expression
+{
+    fmt::print("Parsing an expression -> current: {}",
+               look_ahead()->as_string());
+    auto lhs = parse_term();
+
+    while (look_ahead()->kind().raw() == kind_t::PLUS ||
+           look_ahead()->kind().raw() == kind_t::MINUS)
     {
-        return parse_primary();
-    }
-
-    auto p_as_int = static_cast<int>(p);
-
-    auto lhs = parse_expr(static_cast<Precendence>(p_as_int + 1));
-
-    if (auto op = look_ahead().value())
-    {
-        auto rhs = parse_expr(p);
+        auto op = look_ahead().value();
+        step();
+        auto rhs = parse_term();
 
         return BinaryExpression{ lhs, rhs, op.as_string() };
     }
@@ -78,24 +83,38 @@ auto Parser::parse_expr(Precendence p) -> Expression
     return lhs;
 }
 
-auto Parser::parse_primary() -> Expression
+// T -> F * T | F / T | F
+auto Parser::parse_term() -> Expression
 {
-    if (auto token = look_ahead().value())
+    fmt::print("Parsing an term -> current: {}", look_ahead()->as_string());
+    auto lhs = parse_factor();
+
+    while (look_ahead()->kind().raw() == kind_t::STAR ||
+           look_ahead()->kind().raw() == kind_t::SLASH)
     {
-        switch (token.kind().raw())
-        {
-            default:
-                fmt::print("Unimplemented\n");
-                break;
-        }
+        auto op = look_ahead().value();
+        step();
+        auto rhs = parse_term();
+
+        return BinaryExpression{ lhs, rhs, op.as_string() };
     }
 
-    fmt::print(
-        "Expected primary expression but reached the end of the input\n");
-    std::exit(1);
+    return lhs;
 }
 
-auto Parser::Parse() -> void
+// F -> NUMBERLIT
+auto Parser::parse_factor() -> Expression
 {
-    parse_primary();
+    fmt::print("Parsing an factor -> current: {}", look_ahead()->as_string());
+    if (!expect(kind_t::NUMBERLIT))
+    {
+        fmt::print("Expected a NumberLiteral and got {}\n",
+                   look_ahead()->kind().as_string());
+        std::exit(1);
+    }
+
+    auto token = look_ahead().value();
+    step();
+
+    return NumberLiteral{ std::get<double>(token.value().raw()) };
 }
