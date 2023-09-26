@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <tuple>
 #include <unordered_map>
 
 #include "Parser/Visitor.hpp"
@@ -79,7 +80,8 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
         auto rhs = parse_term();
 
         return std::make_unique<BinaryExpression>(
-            std::move(lhs), std::move(rhs), op.as_string());
+            std::move(lhs), std::move(rhs),
+            std::get<std::string>(op.value().raw()));
     }
 
     return lhs;

@@ -6,12 +6,12 @@
 
 auto Printer::visit(const NumberLiteral& num) -> void
 {
-    fmt::print("{}", num.value());
+    fmt::print("{}\n", num.value());
 }
 
 auto Printer::visit(const BinaryExpression& expr) -> void
 {
     expr.lhs()->visit(*this);
-    fmt::print("{}", expr.op());
+    fmt::print("{}\n", expr.op());
     expr.rhs()->visit(*this);
 }
