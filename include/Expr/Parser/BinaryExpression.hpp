@@ -14,7 +14,7 @@ public:
     auto rhs() const -> Expression*;
     auto op() const -> std::string;
 
-    auto visit(Visitor&, int = 0) -> void override;
+    auto visit(Visitor&, int = 0, bool = false) -> void override;
 
 private:
     std::unique_ptr<Expression> m_lhs;

@@ -18,7 +18,7 @@ public:
 
     auto kind() const -> AST_kind;
 
-    virtual auto visit(Visitor&, int = 0) -> void = 0;
+    virtual auto visit(Visitor&, int = 0, bool = false) -> void = 0;
 
     virtual ~Node() = default;
 

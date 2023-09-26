@@ -10,7 +10,7 @@ auto NumberLiteral::value() const -> double
     return m_value;
 }
 
-auto NumberLiteral::visit(Visitor& visitor, int depth) -> void
+auto NumberLiteral::visit(Visitor& visitor, int depth, bool last) -> void
 {
-    visitor.visit(*this, depth);
+    visitor.visit(*this, depth, last);
 }

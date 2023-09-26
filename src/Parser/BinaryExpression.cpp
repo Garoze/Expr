@@ -26,7 +26,7 @@ auto BinaryExpression::op() const -> std::string
     return m_op;
 }
 
-auto BinaryExpression::visit(Visitor& visitor, int depth) -> void
+auto BinaryExpression::visit(Visitor& visitor, int depth, bool last) -> void
 {
-    visitor.visit(*this, depth);
+    visitor.visit(*this, depth, last);
 }

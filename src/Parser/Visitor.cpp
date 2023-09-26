@@ -4,19 +4,24 @@
 #include "Parser/NumberLiteral.hpp"
 #include "Parser/Visitor.hpp"
 
-#define SPACE(n) fmt::format("{:>{}}", "", (n) + 1);
+#define SPACE(n) fmt::format("{:>{}}", "", (n) + 1)
 
-auto Printer::visit(const NumberLiteral& num, int depth) -> void
+auto Printer::makePrefix(int depth, bool last) -> std::string
 {
     auto space = SPACE(depth);
-    fmt::print("{}Lit: {}\n", space, num.value());
+    return space + (last ? "└──" : "├──");
 }
 
-auto Printer::visit(const BinaryExpression& expr, int depth) -> void
+auto Printer::visit(const NumberLiteral& num, int depth, bool last) -> void
 {
-    auto space = SPACE(depth);
-    fmt::print("{}Op: {}\n", space, depth, expr.op());
+    auto prefix = makePrefix(depth, last);
+    fmt::print("{}Lit: {}\n", prefix, num.value());
+}
 
-    expr.lhs()->visit(*this, depth + 1);
-    expr.rhs()->visit(*this, depth + 1);
+auto Printer::visit(const BinaryExpression& expr, int depth, bool) -> void
+{
+    fmt::print("{}Op: {}\n", SPACE(depth), expr.op());
+
+    expr.lhs()->visit(*this, depth + 1, false);
+    expr.rhs()->visit(*this, depth + 1, true);
 }
