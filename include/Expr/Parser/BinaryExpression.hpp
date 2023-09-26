@@ -1,14 +1,17 @@
 #pragma once
 
+#include <memory>
+
 #include "Parser/Expression.hpp"
 
 class BinaryExpression : public Expression
 {
 public:
-    BinaryExpression(Expression, Expression, std::string);
+    BinaryExpression(std::unique_ptr<Expression>, std::unique_ptr<Expression>,
+                     std::string);
 
 private:
-    Expression m_lhs;
-    Expression m_rhs;
+    std::unique_ptr<Expression> m_lhs;
+    std::unique_ptr<Expression> m_rhs;
     std::string m_op;
 };

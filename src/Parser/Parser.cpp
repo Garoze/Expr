@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstdint>
+#include <memory>
 #include <unordered_map>
 
 #include "fmt/core.h"
@@ -63,7 +64,7 @@ auto Parser::Parse() -> void
 }
 
 // Expr -> Term { + | - Term }+
-auto Parser::parse_expr() -> Expression
+auto Parser::parse_expr() -> std::unique_ptr<Expression>
 {
     fmt::print("Parsing an expression -> current: {}\n",
                look_ahead()->as_string());
@@ -76,14 +77,15 @@ auto Parser::parse_expr() -> Expression
         step();
         auto rhs = parse_term();
 
-        return BinaryExpression{ lhs, rhs, op.as_string() };
+        return std::make_unique<BinaryExpression>(
+            std::move(lhs), std::move(rhs), op.as_string());
     }
 
     return lhs;
 }
 
 // Term -> Factor * Term | Factor / Term | Factor
-auto Parser::parse_term() -> Expression
+auto Parser::parse_term() -> std::unique_ptr<Expression>
 {
     fmt::print("Parsing an term -> current: {}\n", look_ahead()->as_string());
     auto lhs = parse_factor();
@@ -95,14 +97,15 @@ auto Parser::parse_term() -> Expression
         step();
         auto rhs = parse_term();
 
-        return BinaryExpression{ lhs, rhs, op.as_string() };
+        return std::make_unique<BinaryExpression>(
+            std::move(lhs), std::move(rhs), op.as_string());
     }
 
     return lhs;
 }
 
 // Factor -> NUMBERLIT
-auto Parser::parse_factor() -> Expression
+auto Parser::parse_factor() -> std::unique_ptr<Expression>
 {
     fmt::print("Parsing an factor -> current: {}\n", look_ahead()->as_string());
     if (!expect(kind_t::NUMBERLIT))
@@ -115,5 +118,6 @@ auto Parser::parse_factor() -> Expression
     auto token = look_ahead().value();
     step();
 
-    return NumberLiteral{ std::get<double>(token.value().raw()) };
+    return std::make_unique<NumberLiteral>(
+        std::get<double>(token.value().raw()));
 }

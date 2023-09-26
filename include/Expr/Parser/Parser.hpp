@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cwchar>
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -26,9 +27,9 @@ public:
 
     auto Parse() -> void;
 
-    auto parse_expr() -> Expression;
-    auto parse_term() -> Expression;
-    auto parse_factor() -> Expression;
+    auto parse_expr() -> std::unique_ptr<Expression>;
+    auto parse_term() -> std::unique_ptr<Expression>;
+    auto parse_factor() -> std::unique_ptr<Expression>;
 
 private:
     auto step() -> void;
