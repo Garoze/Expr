@@ -9,7 +9,7 @@ public:
 
     [[nodiscard]] auto value() const -> double;
 
-    auto visit(Visitor& visitor) -> void override;
+    auto visit(Visitor&, int = 0) -> void override;
 
 private:
     double m_value;

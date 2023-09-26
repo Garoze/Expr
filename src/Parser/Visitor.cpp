@@ -4,14 +4,19 @@
 #include "Parser/NumberLiteral.hpp"
 #include "Parser/Visitor.hpp"
 
-auto Printer::visit(const NumberLiteral& num) -> void
+#define SPACE(n) fmt::format("{:>{}}", "", (n) + 1);
+
+auto Printer::visit(const NumberLiteral& num, int depth) -> void
 {
-    fmt::print("Lit: {}\n", num.value());
+    auto space = SPACE(depth);
+    fmt::print("{}Lit: {}\n", space, num.value());
 }
 
-auto Printer::visit(const BinaryExpression& expr) -> void
+auto Printer::visit(const BinaryExpression& expr, int depth) -> void
 {
-    fmt::print("Op: {}\n", expr.op());
-    expr.lhs()->visit(*this);
-    expr.rhs()->visit(*this);
+    auto space = SPACE(depth);
+    fmt::print("{}Op: {}\n", space, depth, expr.op());
+
+    expr.lhs()->visit(*this, depth + 1);
+    expr.rhs()->visit(*this, depth + 1);
 }

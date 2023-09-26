@@ -9,5 +9,5 @@ public:
     Expression();
     Expression(AST_kind);
 
-    auto visit(Visitor& visitor) -> void override;
+    auto visit(Visitor&, int = 0) -> void override;
 };
