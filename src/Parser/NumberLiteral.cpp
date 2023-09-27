@@ -15,3 +15,8 @@ auto NumberLit::visit(Visitor& visitor, std::string indent, int depth,
 {
     visitor.visit(*this, indent, depth, last);
 }
+
+auto NumberLit::eval(Evaluator& evaluator) -> double
+{
+    return evaluator.eval(*this);
+}

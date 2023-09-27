@@ -11,4 +11,6 @@ public:
 
     auto visit(Visitor&, std::string = "", int = 0, bool = false)
         -> void override;
+
+    auto eval(Evaluator&) -> double override;
 };

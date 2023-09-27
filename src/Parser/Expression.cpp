@@ -10,3 +10,8 @@ Expression::Expression(AST_kind kind)
 
 auto Expression::visit(Visitor&, std::string, int, bool) -> void
 {}
+
+auto Expression::eval(Evaluator&) -> double
+{
+    return 0;
+}

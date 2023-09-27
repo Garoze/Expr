@@ -16,6 +16,8 @@ public:
 
     auto visit(Visitor&, std::string, int = 0, bool = false) -> void override;
 
+    auto eval(Evaluator&) -> double override;
+
 private:
     std::unique_ptr<Expression> m_lhs;
     std::unique_ptr<Expression> m_rhs;

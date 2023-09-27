@@ -39,6 +39,8 @@ private:
     auto on_range(std::size_t) const -> bool;
     auto look_ahead(std::size_t = 0) const -> std::optional<Token>;
 
+    auto eval_expr(Expression) -> double;
+
 private:
     std::size_t m_index;
     std::vector<Token> m_tokens;

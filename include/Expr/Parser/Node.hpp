@@ -5,6 +5,7 @@
 #include <variant>
 #include <vector>
 
+#include "Parser/Evaluator.hpp"
 #include "Parser/Visitor.hpp"
 
 enum class AST_kind
@@ -22,6 +23,9 @@ public:
 
     virtual auto visit(Visitor&, std::string = "", int = 0, bool = true)
         -> void = 0;
+
+    virtual auto eval(Evaluator&) -> double = 0;
+
     virtual ~Node() = default;
 
 private:

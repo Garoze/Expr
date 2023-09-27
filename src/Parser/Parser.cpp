@@ -4,6 +4,7 @@
 #include <tuple>
 #include <unordered_map>
 
+#include "Parser/Evaluator.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
@@ -65,6 +66,11 @@ auto Parser::Parse() -> void
     Printer p;
     auto expr = parse_expr();
     expr->visit(p);
+
+    Evaluator e;
+    auto result = expr->eval(e);
+
+    fmt::print("Result: {}\n", result);
 }
 
 // Expr -> Term { + | - Term }+
