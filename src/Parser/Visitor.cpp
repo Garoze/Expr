@@ -14,26 +14,23 @@ auto Printer::makePrefix(int depth, bool last) -> std::string
     {
         return "";
     }
-    else
-    {
-        return (last ? "└──" : "├──");
-    }
+
+    return (last ? "└──" : "├──");
 }
 
 auto Printer::visit(const NumberLiteral& num, std::string indent, int depth,
                     bool last) -> void
 {
-    auto prefix = makePrefix(depth, last);
-    fmt::print("{}{}Lit: {}\n", indent, prefix, num.value());
+    fmt::print("{}{}Lit: {}\n", indent, makePrefix(depth, last), num.value());
 }
 
 auto Printer::visit(const BinaryExpression& expr, std::string indent, int depth,
                     bool last) -> void
 {
-    auto prefix = makePrefix(depth, last);
-    fmt::print("{}{}Op:{}\n", indent, prefix, expr.op());
+    fmt::print("{}{}Op:{}\n", indent, makePrefix(depth, last), expr.op());
 
-    indent += last ? "    " : "│   ";
+    if (depth > 0)
+        indent += last ? "    " : "│   ";
 
     expr.lhs()->visit(*this, indent, depth + 1, false);
     expr.rhs()->visit(*this, indent, depth + 1, true);

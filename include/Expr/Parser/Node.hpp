@@ -20,7 +20,8 @@ public:
 
     auto kind() const -> AST_kind;
 
-    virtual auto visit(Visitor&, std::string, int = 0, bool = true) -> void = 0;
+    virtual auto visit(Visitor&, std::string = "", int = 0, bool = true)
+        -> void = 0;
     virtual ~Node() = default;
 
 private:
