@@ -4,7 +4,6 @@
 #include <tuple>
 #include <unordered_map>
 
-#include "Parser/Visitor.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
@@ -12,6 +11,7 @@
 #include "Parser/BinaryExpression.hpp"
 #include "Parser/NumberLiteral.hpp"
 #include "Parser/Parser.hpp"
+#include "Parser/Printer.hpp"
 
 Parser::Parser()
     : m_index(0)

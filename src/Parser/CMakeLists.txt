@@ -3,7 +3,7 @@ add_library(Parser
   Expression.cpp
   NumberLiteral.cpp
   BinaryExpression.cpp
-  Visitor.cpp
+  Printer.cpp
   Parser.cpp
 )
 
