@@ -5,7 +5,6 @@
 #include "Parser/BinaryExpr.hpp"
 #include "Parser/NumberLit.hpp"
 #include "Parser/Printer.hpp"
-#include "Parser/Visitor.hpp"
 
 auto Printer::makePrefix(int depth, bool last) -> std::string
 {
