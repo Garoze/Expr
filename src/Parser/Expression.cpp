@@ -8,5 +8,5 @@ Expression::Expression(AST_kind kind)
     : Node{ kind }
 {}
 
-auto Expression::visit(Visitor&, int, bool) -> void
+auto Expression::visit(Visitor&, std::string, int, bool) -> void
 {}

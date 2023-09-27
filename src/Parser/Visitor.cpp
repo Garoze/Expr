@@ -1,3 +1,5 @@
+#include <string>
+
 #include "fmt/core.h"
 
 #include "Parser/BinaryExpression.hpp"
@@ -8,20 +10,31 @@
 
 auto Printer::makePrefix(int depth, bool last) -> std::string
 {
-    auto space = SPACE(depth);
-    return space + (last ? "└──" : "├──");
+    if (depth == 0)
+    {
+        return "";
+    }
+    else
+    {
+        return (last ? "└──" : "├──");
+    }
 }
 
-auto Printer::visit(const NumberLiteral& num, int depth, bool last) -> void
+auto Printer::visit(const NumberLiteral& num, std::string indent, int depth,
+                    bool last) -> void
 {
     auto prefix = makePrefix(depth, last);
-    fmt::print("{}Lit: {}\n", prefix, num.value());
+    fmt::print("{}{}Lit: {}\n", indent, prefix, num.value());
 }
 
-auto Printer::visit(const BinaryExpression& expr, int depth, bool) -> void
+auto Printer::visit(const BinaryExpression& expr, std::string indent, int depth,
+                    bool last) -> void
 {
-    fmt::print("{}Op: {}\n", SPACE(depth), expr.op());
+    auto prefix = makePrefix(depth, last);
+    fmt::print("{}{}Op:{}\n", indent, prefix, expr.op());
 
-    expr.lhs()->visit(*this, depth + 1, false);
-    expr.rhs()->visit(*this, depth + 1, true);
+    indent += last ? "    " : "│   ";
+
+    expr.lhs()->visit(*this, indent, depth + 1, false);
+    expr.rhs()->visit(*this, indent, depth + 1, true);
 }

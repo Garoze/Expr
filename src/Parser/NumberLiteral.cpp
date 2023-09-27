@@ -10,7 +10,8 @@ auto NumberLiteral::value() const -> double
     return m_value;
 }
 
-auto NumberLiteral::visit(Visitor& visitor, int depth, bool last) -> void
+auto NumberLiteral::visit(Visitor& visitor, std::string indent, int depth,
+                          bool last) -> void
 {
-    visitor.visit(*this, depth, last);
+    visitor.visit(*this, indent, depth, last);
 }

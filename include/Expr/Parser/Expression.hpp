@@ -9,5 +9,5 @@ public:
     Expression();
     Expression(AST_kind);
 
-    auto visit(Visitor&, int = 0, bool = false) -> void override;
+    auto visit(Visitor&, std::string, int = 0, bool = false) -> void override;
 };

@@ -2,6 +2,8 @@
 
 #include <string>
 #include <unordered_map>
+#include <variant>
+#include <vector>
 
 #include "Parser/Visitor.hpp"
 
@@ -18,8 +20,7 @@ public:
 
     auto kind() const -> AST_kind;
 
-    virtual auto visit(Visitor&, int = 0, bool = false) -> void = 0;
-
+    virtual auto visit(Visitor&, std::string, int = 0, bool = true) -> void = 0;
     virtual ~Node() = default;
 
 private:

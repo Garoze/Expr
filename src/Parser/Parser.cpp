@@ -64,7 +64,7 @@ auto Parser::Parse() -> void
 {
     Printer p;
     auto expr = parse_expr();
-    expr->visit(p);
+    expr->visit(p, "");
 }
 
 // Expr -> Term { + | - Term }+
