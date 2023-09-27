@@ -8,8 +8,8 @@
 
 #include "Lexer/Kind.hpp"
 
-#include "Parser/BinaryExpression.hpp"
-#include "Parser/NumberLiteral.hpp"
+#include "Parser/BinaryExpr.hpp"
+#include "Parser/NumberLit.hpp"
 #include "Parser/Parser.hpp"
 #include "Parser/Printer.hpp"
 
@@ -79,7 +79,7 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
         step();
         auto rhs = parse_term();
 
-        lhs = std::make_unique<BinaryExpression>(
+        lhs = std::make_unique<BinaryExpr>(
             std::move(lhs), std::move(rhs),
             std::get<std::string>(op.value().raw()));
     }
@@ -99,7 +99,7 @@ auto Parser::parse_term() -> std::unique_ptr<Expression>
         step();
         auto rhs = parse_term();
 
-        lhs = std::make_unique<BinaryExpression>(
+        lhs = std::make_unique<BinaryExpr>(
             std::move(lhs), std::move(rhs),
             std::get<std::string>(op.value().raw()));
     }
@@ -120,6 +120,5 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
     auto token = look_ahead().value();
     step();
 
-    return std::make_unique<NumberLiteral>(
-        std::get<double>(token.value().raw()));
+    return std::make_unique<NumberLit>(std::get<double>(token.value().raw()));
 }

@@ -2,8 +2,8 @@
 
 #include "fmt/core.h"
 
-#include "Parser/BinaryExpression.hpp"
-#include "Parser/NumberLiteral.hpp"
+#include "Parser/BinaryExpr.hpp"
+#include "Parser/NumberLit.hpp"
 #include "Parser/Printer.hpp"
 #include "Parser/Visitor.hpp"
 
@@ -17,13 +17,13 @@ auto Printer::makePrefix(int depth, bool last) -> std::string
     return (last ? "└──" : "├──");
 }
 
-auto Printer::visit(const NumberLiteral& num, std::string indent, int depth,
+auto Printer::visit(const NumberLit& num, std::string indent, int depth,
                     bool last) -> void
 {
     fmt::print("{}{}Lit: {}\n", indent, makePrefix(depth, last), num.value());
 }
 
-auto Printer::visit(const BinaryExpression& expr, std::string indent, int depth,
+auto Printer::visit(const BinaryExpr& expr, std::string indent, int depth,
                     bool last) -> void
 {
     fmt::print("{}{}Op:{}\n", indent, makePrefix(depth, last), expr.op());

@@ -1,33 +1,32 @@
 #include <algorithm>
 
-#include "Parser/BinaryExpression.hpp"
+#include "Parser/BinaryExpr.hpp"
 
-BinaryExpression::BinaryExpression(std::unique_ptr<Expression> lhs,
-                                   std::unique_ptr<Expression> rhs,
-                                   std::string op)
+BinaryExpr::BinaryExpr(std::unique_ptr<Expression> lhs,
+                       std::unique_ptr<Expression> rhs, std::string op)
     : Expression{ AST_kind::BinaryExpression }
     , m_lhs(std::move(lhs))
     , m_rhs(std::move(rhs))
     , m_op(op)
 {}
 
-auto BinaryExpression::lhs() const -> Expression*
+auto BinaryExpr::lhs() const -> Expression*
 {
     return m_lhs.get();
 }
 
-auto BinaryExpression::rhs() const -> Expression*
+auto BinaryExpr::rhs() const -> Expression*
 {
     return m_rhs.get();
 }
 
-auto BinaryExpression::op() const -> std::string
+auto BinaryExpr::op() const -> std::string
 {
     return m_op;
 }
 
-auto BinaryExpression::visit(Visitor& visitor, std::string indent, int depth,
-                             bool last) -> void
+auto BinaryExpr::visit(Visitor& visitor, std::string indent, int depth,
+                       bool last) -> void
 {
     visitor.visit(*this, indent, depth, last);
 }

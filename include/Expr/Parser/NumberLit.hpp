@@ -2,10 +2,10 @@
 
 #include "Parser/Expression.hpp"
 
-class NumberLiteral : public Expression
+class NumberLit : public Expression
 {
 public:
-    NumberLiteral(double);
+    NumberLit(double);
 
     [[nodiscard]] auto value() const -> double;
 

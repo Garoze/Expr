@@ -4,11 +4,11 @@
 
 #include "Parser/Expression.hpp"
 
-class BinaryExpression : public Expression
+class BinaryExpr : public Expression
 {
 public:
-    BinaryExpression(std::unique_ptr<Expression>, std::unique_ptr<Expression>,
-                     std::string);
+    BinaryExpr(std::unique_ptr<Expression>, std::unique_ptr<Expression>,
+               std::string);
 
     auto lhs() const -> Expression*;
     auto rhs() const -> Expression*;
