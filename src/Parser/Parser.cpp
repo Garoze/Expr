@@ -68,9 +68,7 @@ auto Parser::Parse() -> void
     expr->visit(p);
 
     Evaluator e;
-    auto result = expr->eval(e);
-
-    fmt::print("Result: {}\n", result);
+    fmt::print("Result: {:.2f}\n", expr->eval(e));
 }
 
 // Expr -> Term { + | - Term }+
