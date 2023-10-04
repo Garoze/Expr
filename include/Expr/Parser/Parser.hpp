@@ -34,6 +34,8 @@ public:
 private:
     auto step() -> void;
     auto chop() -> std::optional<Token>;
+    auto match(kind_t) -> bool;
+    auto match(kind_t, std::string) -> bool;
     auto expect(kind_t) const -> bool;
 
     auto on_range(std::size_t) const -> bool;

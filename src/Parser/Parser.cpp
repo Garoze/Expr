@@ -46,6 +46,29 @@ auto Parser::chop() -> std::optional<Token>
     return {};
 }
 
+auto Parser::match(kind_t kind) -> bool
+{
+    if (look_ahead()->kind().raw() != kind)
+    {
+        return false;
+    }
+
+    step();
+    return true;
+}
+
+auto Parser::match(kind_t kind, std::string err) -> bool
+{
+    if (look_ahead()->kind().raw() != kind)
+    {
+        fmt::print("[match] - {} Location: {}\n", err, m_index);
+        return false;
+    }
+
+    step();
+    return true;
+}
+
 auto Parser::expect(kind_t kind) const -> bool
 {
     return m_tokens.at(m_index).kind().raw() == kind;
@@ -129,10 +152,9 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
 
         case kind_t::LPAREN:
         {
-            step(); // skip '('
+            match(kind_t::LPAREN, "Expected a LParen");
             auto expr = parse_expr();
-
-            expect(kind_t::RPAREN);
+            match(kind_t::RPAREN, "Expected a RParen");
 
             return expr;
         }
