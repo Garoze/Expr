@@ -100,7 +100,6 @@ auto Parser::Parse() -> void
     fmt::print("Result: {:.2f}\n", expr->eval(e));
 }
 
-// Expr -> Term { + | - Term }+
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
 {
     auto lhs = parse_term();
@@ -120,7 +119,6 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
     return lhs;
 }
 
-// Term -> Factor { * | / Term }+
 auto Parser::parse_term() -> std::unique_ptr<Expression>
 {
     auto lhs = parse_factor();
@@ -140,7 +138,6 @@ auto Parser::parse_term() -> std::unique_ptr<Expression>
     return lhs;
 }
 
-// Factor -> NUMBERLIT | '(' expression ')'
 auto Parser::parse_factor() -> std::unique_ptr<Expression>
 {
     switch (look_ahead()->kind().raw())
