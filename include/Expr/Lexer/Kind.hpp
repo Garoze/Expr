@@ -28,6 +28,19 @@ const std::unordered_map<char, kind_t> char_to_kind = {
     { '%', kind_t::PERCENTAGE }, { '^', kind_t::CARROT },
 };
 
+const std::unordered_map<kind_t, std::string> kind_as_string = {
+    { kind_t::LPAREN, "LeftParen" },
+    { kind_t::RPAREN, "RightParen" },
+    { kind_t::PLUS, "Plus" },
+    { kind_t::MINUS, "Minus" },
+    { kind_t::SLASH, "Slash" },
+    { kind_t::STAR, "Star" },
+    { kind_t::PERCENTAGE, "Percentage" },
+    { kind_t::CARROT, "Carrot" },
+    { kind_t::NUMBERLIT, "NumberLit" },
+    { kind_t::ERROR, "Error" },
+};
+
 class Kind
 {
 public:
