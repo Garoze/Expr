@@ -1,0 +1,19 @@
+expression = 
+    term 
+    | { '+' | '-' term } + 
+    ;
+
+term = 
+    factor 
+    | { '*' | '/' term } +
+    ;
+
+factor = 
+    NUMBERLIT
+    | '(' expression ')'
+    ;
+
+NUMBERLIT = 
+    | { 0..9 }+
+    ;
+
