@@ -64,10 +64,11 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
 auto Parser::Parse() -> void
 {
     Printer p;
+    Evaluator e;
+
     auto expr = parse_expr();
     expr->visit(p);
 
-    Evaluator e;
     fmt::print("Result: {:.2f}\n", expr->eval(e));
 }
 
@@ -91,7 +92,7 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
     return lhs;
 }
 
-// Term -> Factor * Term | Factor / Term | Factor
+// Term -> Factor { * | / Term }+
 auto Parser::parse_term() -> std::unique_ptr<Expression>
 {
     auto lhs = parse_factor();
@@ -111,18 +112,37 @@ auto Parser::parse_term() -> std::unique_ptr<Expression>
     return lhs;
 }
 
-// Factor -> NUMBERLIT
+// Factor -> NUMBERLIT | '(' expression ')'
 auto Parser::parse_factor() -> std::unique_ptr<Expression>
 {
-    if (!expect(kind_t::NUMBERLIT))
+    switch (look_ahead()->kind().raw())
     {
-        fmt::print("Expected a NumberLiteral and got {}\n",
-                   look_ahead()->kind().as_string());
-        std::exit(1);
+        case kind_t::NUMBERLIT:
+        {
+            auto token = look_ahead().value();
+            step();
+
+            return std::make_unique<NumberLit>(
+                std::get<double>(token.value().raw()));
+        }
+        break;
+
+        case kind_t::LPAREN:
+        {
+            step(); // skip '('
+            auto expr = parse_expr();
+
+            expect(kind_t::RPAREN);
+
+            return expr;
+        }
+        break;
+
+        default:
+            fmt::print("[parse_factor] -> Got something else than a "
+                       "`NUMBERLIT` or `LPAREN` at {} -> {}\n",
+                       m_index, look_ahead()->as_string());
+            std::exit(1);
+            break;
     }
-
-    auto token = look_ahead().value();
-    step();
-
-    return std::make_unique<NumberLit>(std::get<double>(token.value().raw()));
 }
