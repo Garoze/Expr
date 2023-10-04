@@ -50,7 +50,11 @@ auto Parser::match(kind_t kind) -> bool
 {
     if (look_ahead()->kind().raw() != kind)
     {
-        return false;
+        fmt::print("[Parser::match] Pos: {} - Expected `{}` got `{}`!\n",
+                   m_index, kind_as_string.at(kind),
+                   look_ahead()->kind().as_string());
+
+        std::exit(1);
     }
 
     step();
@@ -61,8 +65,9 @@ auto Parser::match(kind_t kind, std::string err) -> bool
 {
     if (look_ahead()->kind().raw() != kind)
     {
-        fmt::print("[match] - {} Location: {}\n", err, m_index);
-        return false;
+        fmt::print("[Parser::match] Pos: {} - Err: {}\n", m_index, err);
+
+        std::exit(1);
     }
 
     step();
@@ -152,9 +157,9 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
 
         case kind_t::LPAREN:
         {
-            match(kind_t::LPAREN, "Expected a LParen");
+            match(kind_t::LPAREN);
             auto expr = parse_expr();
-            match(kind_t::RPAREN, "Expected a RParen");
+            match(kind_t::RPAREN);
 
             return expr;
         }
