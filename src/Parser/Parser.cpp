@@ -171,12 +171,16 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
             }
             else
             {
+                Printer p;
+                Evaluator e;
+
                 match(kind_t::EQUALS);
-                auto token = expect(kind_t::NUMBERLIT).value();
+                auto expr = parse_expr();
                 match(kind_t::SEMI);
 
-                m_symbol_table[identifier] =
-                    std::get<double>(token.value().raw());
+                expr->visit(p);
+
+                m_symbol_table[identifier] = expr->eval(e);
 
                 return parse_factor();
             }
