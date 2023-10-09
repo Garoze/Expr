@@ -188,6 +188,7 @@ auto Lexer::lex_separators() -> Token
     {
         case '(':
         case ')':
+        case ';':
             step();
             return Token(char_to_kind.at(c), std::string(1, c), m_line,
                          m_index);
@@ -213,6 +214,7 @@ auto Lexer::lex_operators() -> Token
         case '*':
         case '%':
         case '^':
+        case '=':
             step();
             return Token(char_to_kind.at(c), std::string(1, c), m_line,
                          m_index);
@@ -225,6 +227,20 @@ auto Lexer::lex_operators() -> Token
     }
 
     return Token(kind_t::ERROR, "Invalid token from lex_operators", m_line,
+                 m_index);
+}
+
+auto Lexer::lex_identifier() -> Token
+{
+    auto start = m_index;
+
+    while (!is_empty() &&
+           (std::isalnum(current_char()) || current_char() == '_'))
+    {
+        step();
+    }
+
+    return Token(kind_t::IDENTIFIER, m_source.substr(start, m_index), m_line,
                  m_index);
 }
 
@@ -256,6 +272,7 @@ auto Lexer::next_token() -> Token
 
             case '(':
             case ')':
+            case ';':
                 return lex_separators();
                 break;
 
@@ -265,7 +282,64 @@ auto Lexer::next_token() -> Token
             case '*':
             case '%':
             case '^':
+            case '=':
                 return lex_operators();
+                break;
+
+            case '_':
+            case 'a':
+            case 'b':
+            case 'c':
+            case 'd':
+            case 'e':
+            case 'f':
+            case 'g':
+            case 'h':
+            case 'i':
+            case 'j':
+            case 'k':
+            case 'l':
+            case 'm':
+            case 'n':
+            case 'o':
+            case 'p':
+            case 'q':
+            case 'r':
+            case 's':
+            case 't':
+            case 'u':
+            case 'v':
+            case 'w':
+            case 'x':
+            case 'y':
+            case 'z':
+            case 'A':
+            case 'B':
+            case 'C':
+            case 'D':
+            case 'E':
+            case 'F':
+            case 'G':
+            case 'H':
+            case 'I':
+            case 'J':
+            case 'K':
+            case 'L':
+            case 'M':
+            case 'N':
+            case 'O':
+            case 'P':
+            case 'Q':
+            case 'R':
+            case 'S':
+            case 'T':
+            case 'U':
+            case 'V':
+            case 'W':
+            case 'X':
+            case 'Y':
+            case 'Z':
+                return lex_identifier();
                 break;
 
             default:

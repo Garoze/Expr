@@ -32,6 +32,7 @@ private:
     [[nodiscard]] auto lex_numbers() -> Token;
     [[nodiscard]] auto lex_operators() -> Token;
     [[nodiscard]] auto lex_separators() -> Token;
+    [[nodiscard]] auto lex_identifier() -> Token;
 
 private:
     std::size_t m_line;
