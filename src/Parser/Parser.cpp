@@ -4,7 +4,6 @@
 #include <tuple>
 #include <unordered_map>
 
-#include "Parser/Evaluator.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
@@ -152,6 +151,45 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
         }
         break;
 
+        case kind_t::IDENTIFIER:
+        {
+            auto token = look_ahead().value();
+
+            auto identifier = std::get<std::string>(token.value().raw());
+
+            fmt::print("Iden: {}\n", identifier);
+
+            if (m_symbol_table.contains(identifier))
+            {
+                fmt::print("A existe\n");
+                return std::make_unique<NumberLit>(
+                    m_symbol_table.at(identifier));
+            }
+            else
+            {
+                step(); // id
+                match(kind_t::EQUALS);
+                auto token = look_ahead().value();
+                step(); // Num
+                match(kind_t::SEMI);
+
+                // a = 10;  (a + 1)
+                //       ^
+
+                m_symbol_table[identifier] =
+                    std::get<double>(token.value().raw());
+
+                fmt::print("The value was inserted on the symbol_table -> {}\n",
+                           m_symbol_table.at(identifier));
+
+                return parse_expr();
+            }
+
+            fmt::print("[parse_factor] -> Parsing identifier went wrong!\n");
+            std::exit(1);
+        }
+        break;
+
         case kind_t::LPAREN:
         {
             match(kind_t::LPAREN);
@@ -163,10 +201,12 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
         break;
 
         default:
+        {
             fmt::print("[parse_factor] -> Got something else than a "
-                       "`NUMBERLIT` or `LPAREN` at {} -> {}\n",
+                       "`NUMBERLIT`, `LPAREN` or `IDENTIFIER` at {} -> {}\n",
                        m_index, look_ahead()->as_string());
             std::exit(1);
-            break;
+        }
+        break;
     }
 }

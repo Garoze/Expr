@@ -5,6 +5,7 @@
 #include <cwchar>
 #include <memory>
 #include <optional>
+#include <unordered_map>
 #include <vector>
 
 #include "Lexer/Kind.hpp"
@@ -46,4 +47,5 @@ private:
 private:
     std::size_t m_index;
     std::vector<Token> m_tokens;
+    std::unordered_map<std::string, double> m_symbol_table;
 };
