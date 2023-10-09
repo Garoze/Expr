@@ -10,6 +10,7 @@ term =
 
 factor = 
     NUMBERLIT
+    | IDENTIFIER
     | '(' expression ')'
     ;
 
@@ -17,3 +18,6 @@ NUMBERLIT =
     | { 0..9 }+
     ;
 
+IDENTIFIER = 
+    | { a..z A..Z 0..9 '_' } +
+    ; 
