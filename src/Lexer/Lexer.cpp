@@ -240,8 +240,8 @@ auto Lexer::lex_identifier() -> Token
         step();
     }
 
-    return Token(kind_t::IDENTIFIER, m_source.substr(start, m_index), m_line,
-                 m_index);
+    return Token(kind_t::IDENTIFIER, m_source.substr(start, m_index - start),
+                 m_line, m_index);
 }
 
 auto Lexer::next_token() -> Token
