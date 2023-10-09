@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <atomic>
 #include <cstdint>
 #include <memory>
 #include <tuple>
@@ -73,9 +74,16 @@ auto Parser::match(kind_t kind, std::string err) -> bool
     return true;
 }
 
-auto Parser::expect(kind_t kind) const -> bool
+auto Parser::expect(kind_t kind) -> std::optional<Token>
 {
-    return m_tokens.at(m_index).kind().raw() == kind;
+    auto token = m_tokens.at(m_index);
+
+    if (match(kind))
+    {
+        return token;
+    }
+
+    return {};
 }
 
 auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
@@ -143,8 +151,7 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
     {
         case kind_t::NUMBERLIT:
         {
-            auto token = look_ahead().value();
-            match(kind_t::NUMBERLIT);
+            auto token = expect(kind_t::NUMBERLIT).value();
 
             return std::make_unique<NumberLit>(
                 std::get<double>(token.value().raw()));
@@ -153,26 +160,19 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
 
         case kind_t::IDENTIFIER:
         {
-            auto token = look_ahead().value();
+            auto token = expect(kind_t::IDENTIFIER).value();
 
             auto identifier = std::get<std::string>(token.value().raw());
 
             if (m_symbol_table.contains(identifier))
             {
-                match(kind_t::IDENTIFIER);
-
                 return std::make_unique<NumberLit>(
                     m_symbol_table.at(identifier));
             }
             else
             {
-                // step();
-                match(kind_t::IDENTIFIER);
                 match(kind_t::EQUALS);
-
-                auto token = look_ahead().value();
-
-                match(kind_t::NUMBERLIT);
+                auto token = expect(kind_t::NUMBERLIT).value();
                 match(kind_t::SEMI);
 
                 m_symbol_table[identifier] =
