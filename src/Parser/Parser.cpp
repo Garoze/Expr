@@ -144,7 +144,7 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
         case kind_t::NUMBERLIT:
         {
             auto token = look_ahead().value();
-            step();
+            match(kind_t::NUMBERLIT);
 
             return std::make_unique<NumberLit>(
                 std::get<double>(token.value().raw()));
@@ -157,32 +157,28 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
 
             auto identifier = std::get<std::string>(token.value().raw());
 
-            fmt::print("Iden: {}\n", identifier);
-
             if (m_symbol_table.contains(identifier))
             {
-                fmt::print("A existe\n");
+                match(kind_t::IDENTIFIER);
+
                 return std::make_unique<NumberLit>(
                     m_symbol_table.at(identifier));
             }
             else
             {
-                step(); // id
+                // step();
+                match(kind_t::IDENTIFIER);
                 match(kind_t::EQUALS);
-                auto token = look_ahead().value();
-                step(); // Num
-                match(kind_t::SEMI);
 
-                // a = 10;  (a + 1)
-                //       ^
+                auto token = look_ahead().value();
+
+                match(kind_t::NUMBERLIT);
+                match(kind_t::SEMI);
 
                 m_symbol_table[identifier] =
                     std::get<double>(token.value().raw());
 
-                fmt::print("The value was inserted on the symbol_table -> {}\n",
-                           m_symbol_table.at(identifier));
-
-                return parse_expr();
+                return parse_factor();
             }
 
             fmt::print("[parse_factor] -> Parsing identifier went wrong!\n");
