@@ -24,8 +24,8 @@ int main()
         auto tokens = l.lex_line(input, true);
         input = "";
 
-        // Parser p(tokens);
-        // p.Parse();
+        Parser p(tokens);
+        p.Parse();
     }
 
     return EXIT_SUCCESS;
