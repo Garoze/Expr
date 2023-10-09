@@ -13,7 +13,7 @@ auto Printer::makePrefix(int depth, bool last) -> std::string
         return "";
     }
 
-    return (last ? "└──" : "├──");
+    return (last ? " └──" : " ├──");
 }
 
 auto Printer::visit(const NumberLit& num, std::string indent, int depth,
@@ -28,7 +28,7 @@ auto Printer::visit(const BinaryExpr& expr, std::string indent, int depth,
     fmt::print("{}{}Op:{}\n", indent, makePrefix(depth, last), expr.op());
 
     if (depth > 0)
-        indent += last ? "    " : "│   ";
+        indent += last ? "    " : " │  ";
 
     expr.lhs()->visit(*this, indent, depth + 1, false);
     expr.rhs()->visit(*this, indent, depth + 1, true);
