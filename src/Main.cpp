@@ -21,11 +21,11 @@ int main()
         if (input == "q" || input == "quit")
             break;
 
-        auto tokens = l.lex_line(input, false);
+        auto tokens = l.lex_line(input, true);
         input = "";
 
-        Parser p(tokens);
-        p.Parse();
+        // Parser p(tokens);
+        // p.Parse();
     }
 
     return EXIT_SUCCESS;
