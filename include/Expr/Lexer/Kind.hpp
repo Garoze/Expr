@@ -10,7 +10,9 @@ enum class kind_t
 
     LPAREN,
     RPAREN,
+    SEMI,
 
+    EQUALS,
     PLUS,
     MINUS,
     SLASH,
@@ -18,17 +20,21 @@ enum class kind_t
     PERCENTAGE,
     CARROT,
 
+    IDENTIFIER,
     NUMBERLIT,
     ERROR,
 };
 
 const std::unordered_map<char, kind_t> char_to_kind = {
-    { '(', kind_t::LPAREN },     { ')', kind_t::RPAREN }, { '+', kind_t::PLUS },
-    { '-', kind_t::MINUS },      { '/', kind_t::SLASH },  { '*', kind_t::STAR },
-    { '%', kind_t::PERCENTAGE }, { '^', kind_t::CARROT },
+    { '=', kind_t::EQUALS }, { ';', kind_t::SEMI }, { '(', kind_t::LPAREN },
+    { ')', kind_t::RPAREN }, { '+', kind_t::PLUS }, { '-', kind_t::MINUS },
+    { '/', kind_t::SLASH },  { '*', kind_t::STAR }, { '%', kind_t::PERCENTAGE },
+    { '^', kind_t::CARROT },
 };
 
 const std::unordered_map<kind_t, std::string> kind_as_string = {
+    { kind_t::EQUALS, "Equals" },
+    { kind_t::SEMI, "SemiColon" },
     { kind_t::LPAREN, "LeftParen" },
     { kind_t::RPAREN, "RightParen" },
     { kind_t::PLUS, "Plus" },
@@ -37,6 +43,7 @@ const std::unordered_map<kind_t, std::string> kind_as_string = {
     { kind_t::STAR, "Star" },
     { kind_t::PERCENTAGE, "Percentage" },
     { kind_t::CARROT, "Carrot" },
+    { kind_t::IDENTIFIER, "Identifier" },
     { kind_t::NUMBERLIT, "NumberLit" },
     { kind_t::ERROR, "Error" },
 };
