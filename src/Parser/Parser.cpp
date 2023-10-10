@@ -5,6 +5,7 @@
 #include <tuple>
 #include <unordered_map>
 
+#include "Parser/AssingExpr.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
@@ -99,12 +100,12 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
 auto Parser::Parse() -> void
 {
     Printer p;
-    Evaluator e;
+    // Evaluator e;
 
     auto expr = parse_expr();
     expr->visit(p);
 
-    fmt::print("Result: {:.2f}\n", expr->eval(e));
+    // fmt::print("Result: {:.2f}\n", expr->eval(e));
 }
 
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
@@ -164,29 +165,27 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
 
             auto identifier = std::get<std::string>(token.value().raw());
 
-            if (m_symbol_table.contains(identifier))
+            switch (look_ahead()->kind().raw())
             {
-                return std::make_unique<NumberLit>(
-                    m_symbol_table.at(identifier));
+                case kind_t::EQUALS:
+                {
+                    match(kind_t::EQUALS);
+                    auto expr = parse_expr();
+                    match(kind_t::SEMI);
+
+                    auto id = std::make_unique<IdentifierExpr>(identifier);
+
+                    m_symbol_table[identifier] = 0;
+
+                    return std::make_unique<AssignExpr>(std::move(id),
+                                                        std::move(expr));
+                }
+                break;
+
+                default:
+                    return std::make_unique<IdentifierExpr>(identifier);
+                    break;
             }
-            else
-            {
-                Printer p;
-                Evaluator e;
-
-                match(kind_t::EQUALS);
-                auto expr = parse_expr();
-                match(kind_t::SEMI);
-
-                expr->visit(p);
-
-                m_symbol_table[identifier] = expr->eval(e);
-
-                return parse_factor();
-            }
-
-            fmt::print("[parse_factor] -> Parsing identifier went wrong!\n");
-            std::exit(1);
         }
         break;
 

@@ -12,6 +12,8 @@ enum class AST_kind
 {
     NumberLiteral,
     BinaryExpression,
+    IdentifierExpr,
+    AssignExpr,
 };
 
 class Node

@@ -23,3 +23,13 @@ auto Evaluator::eval(const BinaryExpr& bop) -> double
 
     return 0;
 }
+
+auto Evaluator::eval(const IdentifierExpr&) -> double
+{
+    return 0;
+}
+
+auto Evaluator::eval(const AssignExpr&) -> double
+{
+    return 0;
+}

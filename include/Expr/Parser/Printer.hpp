@@ -12,4 +12,10 @@ public:
 
     auto visit(const BinaryExpr&, std::string, int, bool = true)
         -> void override;
+
+    auto visit(const IdentifierExpr&, std::string, int, bool = true)
+        -> void override;
+
+    auto visit(const AssignExpr&, std::string, int, bool = true)
+        -> void override;
 };
