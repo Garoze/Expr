@@ -18,7 +18,7 @@ public:
     Parser();
     Parser(std::vector<Token>&);
 
-    auto Parse() -> void;
+    auto Parse(bool = false) -> void;
 
     auto parse_expr() -> std::unique_ptr<Expression>;
     auto parse_term() -> std::unique_ptr<Expression>;

@@ -2,7 +2,6 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
-#include <tuple>
 #include <unordered_map>
 
 #include "fmt/core.h"
@@ -99,16 +98,21 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
     return {};
 }
 
-auto Parser::Parse() -> void
+auto Parser::Parse(bool debug) -> void
 {
-    Printer p;
     Evaluator e;
 
     auto expr = parse_expr();
-    expr->visit(p);
+
+    if (debug)
+    {
+        Printer p;
+        expr->visit(p);
+    }
+
     expr->visit(e);
 
-    fmt::print("\nResult: {:.2f}\n", e.value());
+    fmt::print("Result: {:.2f}\n", e.value());
 }
 
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
