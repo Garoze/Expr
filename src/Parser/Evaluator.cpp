@@ -1,35 +1,46 @@
-#include "Parser/Evaluator.hpp"
+#include "fmt/core.h"
+
 #include "Parser/BinaryExpr.hpp"
+#include "Parser/Evaluator.hpp"
+#include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
 
-auto Evaluator::eval(const NumberLit& lit) -> double
+auto Evaluator::visit(const NumberLit& lit) -> void
 {
-    return lit.value();
+    m_value = lit.value();
 }
 
-auto Evaluator::eval(const BinaryExpr& bop) -> double
+auto Evaluator::visit(const IdentifierExpr& identifier) -> void
 {
-    auto lhs = bop.lhs()->eval(*this);
-    auto rhs = bop.rhs()->eval(*this);
+    if (m_symbol_table.contains(identifier.name()))
+    {
+        m_value = m_symbol_table.at(identifier.name());
+    }
+    else
+    {
+        fmt::print("Identifier: `{}` don't exists on the symbol_table!\n",
+                   identifier.name());
+    }
+}
+
+auto Evaluator::visit(const BinaryExpr& bop) -> void
+{
+    bop.lhs()->visit(*this);
+    auto lhs = m_value;
+    bop.rhs()->visit(*this);
+    auto rhs = m_value;
 
     if (bop.op() == "+")
-        return lhs + rhs;
+        m_value = lhs + rhs;
     if (bop.op() == "-")
-        return lhs - rhs;
+        m_value = lhs - rhs;
     if (bop.op() == "*")
-        return lhs * rhs;
+        m_value = lhs * rhs;
     if (bop.op() == "/")
-        return lhs / rhs;
-
-    return 0;
+        m_value = lhs / rhs;
 }
 
-auto Evaluator::eval(const IdentifierExpr&) -> double
+auto Evaluator::value() const -> double
 {
-    return 0;
-}
-
-auto Evaluator::eval(const AssignExpr&) -> double
-{
-    return 0;
+    return m_value;
 }

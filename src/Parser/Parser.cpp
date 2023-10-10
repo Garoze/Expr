@@ -5,12 +5,13 @@
 #include <tuple>
 #include <unordered_map>
 
-#include "Parser/AssingExpr.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
 
 #include "Parser/BinaryExpr.hpp"
+#include "Parser/Evaluator.hpp"
+#include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
 #include "Parser/Parser.hpp"
 #include "Parser/Printer.hpp"
@@ -100,12 +101,13 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
 auto Parser::Parse() -> void
 {
     Printer p;
-    // Evaluator e;
+    Evaluator e;
 
     auto expr = parse_expr();
     expr->visit(p);
+    expr->visit(e);
 
-    // fmt::print("Result: {:.2f}\n", expr->eval(e));
+    fmt::print("Result: {:.2f}\n", e.value());
 }
 
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
@@ -163,27 +165,25 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
         {
             auto token = expect(kind_t::IDENTIFIER).value();
 
-            auto identifier = std::get<std::string>(token.value().raw());
+            auto identifier = std::make_unique<IdentifierExpr>(
+                std::get<std::string>(token.value().raw()));
 
             switch (look_ahead()->kind().raw())
             {
                 case kind_t::EQUALS:
                 {
-                    match(kind_t::EQUALS);
-                    auto expr = parse_expr();
+                    auto op = expect(kind_t::EQUALS).value();
+                    auto rhs = parse_expr();
                     match(kind_t::SEMI);
 
-                    auto id = std::make_unique<IdentifierExpr>(identifier);
-
-                    m_symbol_table[identifier] = 0;
-
-                    return std::make_unique<AssignExpr>(std::move(id),
-                                                        std::move(expr));
+                    return std::make_unique<BinaryExpr>(
+                        std::move(identifier), std::move(rhs),
+                        std::get<std::string>(op.value().raw()));
                 }
                 break;
 
                 default:
-                    return std::make_unique<IdentifierExpr>(identifier);
+                    return identifier;
                     break;
             }
         }

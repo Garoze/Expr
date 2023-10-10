@@ -13,13 +13,6 @@
 
 #include "Parser/Expression.hpp"
 
-enum class Precendence
-{
-    prec0,
-    prec1,
-    __count,
-};
-
 class Parser
 {
 public:

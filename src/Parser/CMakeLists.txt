@@ -4,7 +4,6 @@ add_library(Parser
   NumberLiteral.cpp
   BinaryExpression.cpp
   IdentifierExpr.cpp
-  AssignExpr.cpp
   Printer.cpp
   Evaluator.cpp
   Parser.cpp

@@ -4,10 +4,10 @@
 
 BinaryExpr::BinaryExpr(std::unique_ptr<Expression> lhs,
                        std::unique_ptr<Expression> rhs, std::string op)
-    : Expression{ AST_kind::BinaryExpression }
+    : Expression{ AST_kind::BinaryExpr }
+    , m_op(op)
     , m_lhs(std::move(lhs))
     , m_rhs(std::move(rhs))
-    , m_op(op)
 {}
 
 auto BinaryExpr::lhs() const -> Expression*
@@ -25,13 +25,7 @@ auto BinaryExpr::op() const -> std::string
     return m_op;
 }
 
-auto BinaryExpr::visit(Visitor& visitor, std::string indent, int depth,
-                       bool last) -> void
+auto BinaryExpr::visit(Visitor& visitor) -> void
 {
-    visitor.visit(*this, indent, depth, last);
-}
-
-auto BinaryExpr::eval(Evaluator& evaluator) -> double
-{
-    return evaluator.eval(*this);
+    visitor.visit(*this);
 }

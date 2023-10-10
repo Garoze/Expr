@@ -10,16 +10,14 @@ public:
     BinaryExpr(std::unique_ptr<Expression>, std::unique_ptr<Expression>,
                std::string);
 
-    auto lhs() const -> Expression*;
-    auto rhs() const -> Expression*;
-    auto op() const -> std::string;
+    auto visit(Visitor&) -> void override;
 
-    auto visit(Visitor&, std::string, int = 0, bool = false) -> void override;
-
-    auto eval(Evaluator&) -> double override;
+    [[nodiscard]] auto op() const -> std::string;
+    [[nodiscard]] auto lhs() const -> Expression*;
+    [[nodiscard]] auto rhs() const -> Expression*;
 
 private:
+    std::string m_op;
     std::unique_ptr<Expression> m_lhs;
     std::unique_ptr<Expression> m_rhs;
-    std::string m_op;
 };

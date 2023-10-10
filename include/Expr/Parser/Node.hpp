@@ -5,30 +5,24 @@
 #include <variant>
 #include <vector>
 
-#include "Parser/Evaluator.hpp"
 #include "Parser/Visitor.hpp"
 
 enum class AST_kind
 {
-    NumberLiteral,
-    BinaryExpression,
+    NumberLit,
+    BinaryExpr,
     IdentifierExpr,
-    AssignExpr,
 };
 
 class Node
 {
 public:
     Node(AST_kind);
-
-    auto kind() const -> AST_kind;
-
-    virtual auto visit(Visitor&, std::string = "", int = 0, bool = true)
-        -> void = 0;
-
-    virtual auto eval(Evaluator&) -> double = 0;
-
     virtual ~Node() = default;
+
+    virtual auto visit(Visitor&) -> void = 0;
+
+    [[nodiscard]] auto kind() const -> AST_kind;
 
 private:
     AST_kind m_kind;
