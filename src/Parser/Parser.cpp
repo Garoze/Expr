@@ -108,7 +108,7 @@ auto Parser::Parse() -> void
     expr->visit(p);
     expr->visit(e);
 
-    fmt::print("Result: {:.2f}\n", e.value());
+    fmt::print("\nResult: {:.2f}\n", e.value());
 }
 
 auto Parser::parse_expr() -> std::unique_ptr<Expression>

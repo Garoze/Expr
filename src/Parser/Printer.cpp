@@ -58,7 +58,7 @@ auto Printer::visit(const AssignExpr& assign) -> void
 {
     auto save_indent = m_indent;
 
-    fmt::print("{}Var: {}\n", indent(m_indent, m_depth, m_last),
+    fmt::print("{}Dec: {}\n", indent(m_indent, m_depth, m_last),
                assign.identifier()->name());
 
     if (m_depth > 0)
