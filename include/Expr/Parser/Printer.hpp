@@ -8,6 +8,7 @@ public:
     auto visit(const NumberLit&) -> void override;
     auto visit(const BinaryExpr&) -> void override;
     auto visit(const IdentifierExpr&) -> void override;
+    auto visit(const AssignExpr&) -> void override;
 
 private:
     int m_depth = 0;

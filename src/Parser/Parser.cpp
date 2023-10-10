@@ -9,6 +9,7 @@
 
 #include "Lexer/Kind.hpp"
 
+#include "Parser/AssignExpr.hpp"
 #include "Parser/BinaryExpr.hpp"
 #include "Parser/Evaluator.hpp"
 #include "Parser/IdentifierExpr.hpp"
@@ -176,9 +177,8 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
                     auto rhs = parse_expr();
                     match(kind_t::SEMI);
 
-                    return std::make_unique<BinaryExpr>(
-                        std::move(identifier), std::move(rhs),
-                        std::get<std::string>(op.value().raw()));
+                    return std::make_unique<AssignExpr>(std::move(identifier),
+                                                        std::move(rhs));
                 }
                 break;
 

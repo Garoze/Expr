@@ -23,6 +23,9 @@ auto Evaluator::visit(const IdentifierExpr& identifier) -> void
     }
 }
 
+auto Evaluator::visit(const AssignExpr&) -> void
+{}
+
 auto Evaluator::visit(const BinaryExpr& bop) -> void
 {
     bop.lhs()->visit(*this);

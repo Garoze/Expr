@@ -12,6 +12,7 @@ enum class AST_kind
     NumberLit,
     BinaryExpr,
     IdentifierExpr,
+    AssignExpr,
 };
 
 class Node

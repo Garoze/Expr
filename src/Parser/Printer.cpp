@@ -3,6 +3,7 @@
 
 #include "fmt/core.h"
 
+#include "Parser/AssignExpr.hpp"
 #include "Parser/BinaryExpr.hpp"
 #include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
@@ -20,10 +21,7 @@ auto prefix(int depth, bool last) -> std::string
 
 auto indent(std::string indent, int depth, bool last) -> std::string
 {
-    auto debug = fmt::format("{}{}", indent, prefix(depth, last));
-    // fmt::print("Debug: `{}` {} {}\t", debug, depth, last);
-
-    return debug;
+    return fmt::format("{}{}", indent, prefix(depth, last));
 }
 
 auto Printer::visit(const NumberLit& num) -> void
@@ -33,6 +31,8 @@ auto Printer::visit(const NumberLit& num) -> void
 
 auto Printer::visit(const BinaryExpr& expr) -> void
 {
+    auto save_indent = m_indent;
+
     fmt::print("{}Op: {}\n", indent(m_indent, m_depth, m_last), expr.op());
 
     if (m_depth > 0)
@@ -45,9 +45,29 @@ auto Printer::visit(const BinaryExpr& expr) -> void
 
     m_last = true;
     expr.rhs()->visit(*this);
+
+    m_indent = save_indent;
 }
 
 auto Printer::visit(const IdentifierExpr& id) -> void
 {
     fmt::print("{}Id: {}\n", indent(m_indent, m_depth, m_last), id.name());
+}
+
+auto Printer::visit(const AssignExpr& assign) -> void
+{
+    auto save_indent = m_indent;
+
+    fmt::print("{}Var: {}\n", indent(m_indent, m_depth, m_last),
+               assign.identifier()->name());
+
+    if (m_depth > 0)
+        m_indent += (m_last ? "    " : " │  ");
+
+    m_depth++;
+
+    m_last = true;
+    assign.expr()->visit(*this);
+
+    m_indent = save_indent;
 }
