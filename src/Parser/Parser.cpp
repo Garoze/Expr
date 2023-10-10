@@ -163,27 +163,25 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
         {
             auto token = expect(kind_t::IDENTIFIER).value();
 
-            auto identifier = std::get<std::string>(token.value().raw());
+            auto identifier = std::make_unique<IdentifierExpr>(
+                std::get<std::string>(token.value().raw()));
 
             switch (look_ahead()->kind().raw())
             {
                 case kind_t::EQUALS:
                 {
-                    match(kind_t::EQUALS);
+                    auto op = expect(kind_t::EQUALS).value();
                     auto expr = parse_expr();
                     match(kind_t::SEMI);
 
-                    auto id = std::make_unique<IdentifierExpr>(identifier);
-
-                    m_symbol_table[identifier] = 0;
-
-                    return std::make_unique<AssignExpr>(std::move(id),
-                                                        std::move(expr));
+                    return std::make_unique<BinaryExpr>(
+                        std::move(identifier), std::move(expr),
+                        std::get<std::string>(op.value().raw()));
                 }
                 break;
 
                 default:
-                    return std::make_unique<IdentifierExpr>(identifier);
+                    return identifier;
                     break;
             }
         }
