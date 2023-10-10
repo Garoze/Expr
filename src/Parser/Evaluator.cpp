@@ -1,35 +1,66 @@
-#include "Parser/Evaluator.hpp"
+#include "fmt/core.h"
+
+#include "Parser/AssignExpr.hpp"
 #include "Parser/BinaryExpr.hpp"
+#include "Parser/Evaluator.hpp"
+#include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
 
-auto Evaluator::eval(const NumberLit& lit) -> double
+auto Evaluator::visit(const NumberLit& lit) -> void
 {
-    return lit.value();
+    m_value = lit.value();
 }
 
-auto Evaluator::eval(const BinaryExpr& bop) -> double
+auto Evaluator::visit(const IdentifierExpr& identifier) -> void
 {
-    auto lhs = bop.lhs()->eval(*this);
-    auto rhs = bop.rhs()->eval(*this);
-
-    if (bop.op() == "+")
-        return lhs + rhs;
-    if (bop.op() == "-")
-        return lhs - rhs;
-    if (bop.op() == "*")
-        return lhs * rhs;
-    if (bop.op() == "/")
-        return lhs / rhs;
-
-    return 0;
+    if (m_symbol_table.contains(identifier.name()))
+    {
+        m_value = m_symbol_table.at(identifier.name());
+    }
+    else
+    {
+        fmt::print("Identifier: `{}` don't exists on the symbol_table!\n",
+                   identifier.name());
+        m_value = std::numeric_limits<double>::quiet_NaN();
+    }
 }
 
-auto Evaluator::eval(const IdentifierExpr&) -> double
+auto Evaluator::visit(const AssignExpr& assign) -> void
 {
-    return 0;
+    assign.expr()->visit(*this);
+
+    m_symbol_table[assign.identifier()->name()] = m_value;
 }
 
-auto Evaluator::eval(const AssignExpr&) -> double
+auto Evaluator::visit(const BinaryExpr& bop) -> void
 {
-    return 0;
+    bop.lhs()->visit(*this);
+    auto lhs = m_value;
+
+    bop.rhs()->visit(*this);
+    auto rhs = m_value;
+
+    switch (bop.op().at(0))
+    {
+        case '+':
+            m_value = lhs + rhs;
+            break;
+        case '-':
+            m_value = lhs - rhs;
+            break;
+        case '*':
+            m_value = lhs * rhs;
+            break;
+        case '/':
+            m_value = lhs / rhs;
+            break;
+
+        default:
+            break;
+    }
+}
+
+auto Evaluator::value() const -> double
+{
+    return m_value;
 }

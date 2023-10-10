@@ -2,15 +2,16 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
-#include <tuple>
 #include <unordered_map>
 
-#include "Parser/AssingExpr.hpp"
 #include "fmt/core.h"
 
 #include "Lexer/Kind.hpp"
 
+#include "Parser/AssignExpr.hpp"
 #include "Parser/BinaryExpr.hpp"
+#include "Parser/Evaluator.hpp"
+#include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
 #include "Parser/Parser.hpp"
 #include "Parser/Printer.hpp"
@@ -97,15 +98,21 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
     return {};
 }
 
-auto Parser::Parse() -> void
+auto Parser::Parse(bool debug) -> void
 {
-    Printer p;
-    // Evaluator e;
+    Evaluator e;
 
     auto expr = parse_expr();
-    expr->visit(p);
 
-    // fmt::print("Result: {:.2f}\n", expr->eval(e));
+    if (debug)
+    {
+        Printer p;
+        expr->visit(p);
+    }
+
+    expr->visit(e);
+
+    fmt::print("Result: {:.2f}\n", e.value());
 }
 
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
@@ -171,12 +178,12 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
                 case kind_t::EQUALS:
                 {
                     auto op = expect(kind_t::EQUALS).value();
-                    auto expr = parse_expr();
+feature/printer
+                    auto rhs = parse_expr();
                     match(kind_t::SEMI);
 
-                    return std::make_unique<BinaryExpr>(
-                        std::move(identifier), std::move(expr),
-                        std::get<std::string>(op.value().raw()));
+                    return std::make_unique<AssignExpr>(std::move(identifier),
+                                                        std::move(rhs));
                 }
                 break;
 

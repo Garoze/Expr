@@ -10,13 +10,7 @@ auto IdentifierExpr::name() const -> std::string
     return m_name;
 }
 
-auto IdentifierExpr::visit(Visitor& visitor, std::string indent, int depth,
-                           bool last) -> void
+auto IdentifierExpr::visit(Visitor& visitor) -> void
 {
-    visitor.visit(*this, indent, depth, last);
-}
-
-auto IdentifierExpr::eval(Evaluator& evaluator) -> double
-{
-    return evaluator.eval(*this);
+    visitor.visit(*this);
 }

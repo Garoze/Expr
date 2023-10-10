@@ -1,27 +1,24 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "Parser/Visitor.hpp"
 
 class NumberLit;
 class BinaryExpr;
 class Expression;
-class IdentifierExpr;
-class AssignExpr;
 
-class Eval
+class Evaluator : public Visitor
 {
 public:
-    virtual auto eval(const NumberLit&) -> double = 0;
-    virtual auto eval(const BinaryExpr&) -> double = 0;
-    virtual auto eval(const IdentifierExpr&) -> double = 0;
-    virtual auto eval(const AssignExpr&) -> double = 0;
-};
+    auto visit(const NumberLit&) -> void override;
+    auto visit(const BinaryExpr&) -> void override;
+    auto visit(const IdentifierExpr&) -> void override;
+    auto visit(const AssignExpr&) -> void override;
 
-class Evaluator : public Eval
-{
-public:
-    auto eval(const NumberLit&) -> double override;
-    auto eval(const BinaryExpr&) -> double override;
-    auto eval(const IdentifierExpr&) -> double override;
-    auto eval(const AssignExpr&) -> double override;
+    [[nodiscard]] auto value() const -> double;
+
+private:
+    double m_value;
+    std::unordered_map<std::string, double> m_symbol_table;
 };

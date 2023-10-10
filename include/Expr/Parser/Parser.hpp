@@ -5,7 +5,6 @@
 #include <cwchar>
 #include <memory>
 #include <optional>
-#include <unordered_map>
 #include <vector>
 
 #include "Lexer/Kind.hpp"
@@ -13,20 +12,13 @@
 
 #include "Parser/Expression.hpp"
 
-enum class Precendence
-{
-    prec0,
-    prec1,
-    __count,
-};
-
 class Parser
 {
 public:
     Parser();
     Parser(std::vector<Token>&);
 
-    auto Parse() -> void;
+    auto Parse(bool = false) -> void;
 
     auto parse_expr() -> std::unique_ptr<Expression>;
     auto parse_term() -> std::unique_ptr<Expression>;
@@ -47,5 +39,4 @@ private:
 private:
     std::size_t m_index;
     std::vector<Token> m_tokens;
-    std::unordered_map<std::string, double> m_symbol_table;
 };

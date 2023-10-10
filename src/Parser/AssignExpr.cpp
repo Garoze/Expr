@@ -1,16 +1,17 @@
-#include "Parser/AssingExpr.hpp"
 #include <algorithm>
+
+#include "Parser/AssignExpr.hpp"
 
 AssignExpr::AssignExpr(std::unique_ptr<IdentifierExpr> identifier,
                        std::unique_ptr<Expression> expr)
     : Expression{ AST_kind::AssignExpr }
-    , m_identifier(std::move(identifier))
+    , m_identifer(std::move(identifier))
     , m_expr(std::move(expr))
 {}
 
-auto AssignExpr::identifier() const -> std::string
+auto AssignExpr::identifier() const -> IdentifierExpr*
 {
-    return m_identifier->name();
+    return m_identifer.get();
 }
 
 auto AssignExpr::expr() const -> Expression*
@@ -18,13 +19,7 @@ auto AssignExpr::expr() const -> Expression*
     return m_expr.get();
 }
 
-auto AssignExpr::visit(Visitor& visitor, std::string indent, int depth,
-                       bool last) -> void
+auto AssignExpr::visit(Visitor& visitor) -> void
 {
-    visitor.visit(*this, indent, depth, last);
-}
-
-auto AssignExpr::eval(Evaluator& evaluator) -> double
-{
-    return evaluator.eval(*this);
+    visitor.visit(*this);
 }

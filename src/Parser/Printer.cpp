@@ -1,14 +1,15 @@
+#include <format>
 #include <string>
 
 #include "fmt/core.h"
 
-#include "Parser/AssingExpr.hpp"
+#include "Parser/AssignExpr.hpp"
 #include "Parser/BinaryExpr.hpp"
 #include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
 #include "Parser/Printer.hpp"
 
-auto Printer::makePrefix(int depth, bool last) -> std::string
+auto prefix(int depth, bool last) -> std::string
 {
     if (depth == 0)
     {
@@ -18,39 +19,55 @@ auto Printer::makePrefix(int depth, bool last) -> std::string
     return (last ? " └──" : " ├──");
 }
 
-auto Printer::visit(const NumberLit& num, std::string indent, int depth,
-                    bool last) -> void
+auto indent(std::string indent, int depth, bool last) -> std::string
 {
-    fmt::print("{}{}Lit: {}\n", indent, makePrefix(depth, last), num.value());
+    return fmt::format("{}{}", indent, prefix(depth, last));
 }
 
-auto Printer::visit(const BinaryExpr& expr, std::string indent, int depth,
-                    bool last) -> void
+auto Printer::visit(const NumberLit& num) -> void
 {
-    fmt::print("{}{}Op: {}\n", indent, makePrefix(depth, last), expr.op());
-
-    if (depth > 0)
-        indent += last ? "    " : " │  ";
-
-    expr.lhs()->visit(*this, indent, depth + 1, false);
-    expr.rhs()->visit(*this, indent, depth + 1, true);
+    fmt::print("{}Lit: {}\n", indent(m_indent, m_depth, m_last), num.value());
 }
 
-auto Printer::visit(const IdentifierExpr& identifier, std::string indent,
-                    int depth, bool last) -> void
+auto Printer::visit(const BinaryExpr& expr) -> void
 {
-    fmt::print("{}{}Id: {}\n", indent, makePrefix(depth, last),
-               identifier.name());
+    auto save_indent = m_indent;
+
+    fmt::print("{}Op: {}\n", indent(m_indent, m_depth, m_last), expr.op());
+
+    if (m_depth > 0)
+        m_indent += (m_last ? "    " : " │  ");
+
+    m_depth++;
+
+    m_last = false;
+    expr.lhs()->visit(*this);
+
+    m_last = true;
+    expr.rhs()->visit(*this);
+
+    m_indent = save_indent;
 }
 
-auto Printer::visit(const AssignExpr& assign, std::string indent, int depth,
-                    bool last) -> void
+auto Printer::visit(const IdentifierExpr& id) -> void
 {
-    fmt::print("{}{}Var: {}\n", indent, makePrefix(depth, last),
-               assign.identifier());
+    fmt::print("{}Id: {}\n", indent(m_indent, m_depth, m_last), id.name());
+}
 
-    if (depth > 0)
-        indent += last ? "    " : " │  ";
+auto Printer::visit(const AssignExpr& assign) -> void
+{
+    auto save_indent = m_indent;
 
-    assign.expr()->visit(*this, indent, depth + 1, true);
+    fmt::print("{}Dec: {}\n", indent(m_indent, m_depth, m_last),
+               assign.identifier()->name());
+
+    if (m_depth > 0)
+        m_indent += (m_last ? "    " : " │  ");
+
+    m_depth++;
+
+    m_last = true;
+    assign.expr()->visit(*this);
+
+    m_indent = save_indent;
 }

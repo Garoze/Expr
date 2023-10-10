@@ -25,7 +25,7 @@ int main()
         input = "";
 
         Parser p(tokens);
-        p.Parse();
+        p.Parse(true);
     }
 
     return EXIT_SUCCESS;

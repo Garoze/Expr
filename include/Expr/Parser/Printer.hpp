@@ -5,17 +5,13 @@
 class Printer : public Visitor
 {
 public:
-    auto makePrefix(int, bool = false) -> std::string;
+    auto visit(const NumberLit&) -> void override;
+    auto visit(const BinaryExpr&) -> void override;
+    auto visit(const IdentifierExpr&) -> void override;
+    auto visit(const AssignExpr&) -> void override;
 
-    auto visit(const NumberLit&, std::string, int, bool = true)
-        -> void override;
-
-    auto visit(const BinaryExpr&, std::string, int, bool = true)
-        -> void override;
-
-    auto visit(const IdentifierExpr&, std::string, int, bool = true)
-        -> void override;
-
-    auto visit(const AssignExpr&, std::string, int, bool = true)
-        -> void override;
+private:
+    int m_depth = 0;
+    bool m_last = false;
+    std::string m_indent = "";
 };
