@@ -178,7 +178,6 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
                 case kind_t::EQUALS:
                 {
                     auto op = expect(kind_t::EQUALS).value();
-feature/printer
                     auto rhs = parse_expr();
                     match(kind_t::SEMI);
 
