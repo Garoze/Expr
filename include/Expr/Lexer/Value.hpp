@@ -3,7 +3,6 @@
 #include <string>
 #include <variant>
 
-// TokenValue
 using value_t = std::variant<std::monostate, double, std::string>;
 
 class Value
