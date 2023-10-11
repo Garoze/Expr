@@ -36,6 +36,8 @@ private:
 
     auto eval_expr(Expression) -> double;
 
+    auto is_empty() const -> bool;
+
 private:
     std::size_t m_index;
     std::vector<Token> m_tokens;

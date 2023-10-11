@@ -98,6 +98,11 @@ auto Parser::look_ahead(std::size_t pos) const -> std::optional<Token>
     return {};
 }
 
+auto Parser::is_empty() const -> bool
+{
+    return m_index >= m_tokens.size();
+}
+
 auto Parser::Parse(bool debug) -> void
 {
     Evaluator e;
@@ -177,12 +182,12 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
             {
                 case kind_t::EQUALS:
                 {
-                    auto op = expect(kind_t::EQUALS).value();
-                    auto rhs = parse_expr();
+                    match(kind_t::EQUALS);
+                    auto expr = parse_expr();
                     match(kind_t::SEMI);
 
                     return std::make_unique<AssignExpr>(std::move(identifier),
-                                                        std::move(rhs));
+                                                        std::move(expr));
                 }
                 break;
 
