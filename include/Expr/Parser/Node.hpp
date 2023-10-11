@@ -13,6 +13,7 @@ enum class AST_kind
     BinaryExpr,
     IdentifierExpr,
     AssignExpr,
+    ProgramExpr,
 };
 
 class Node

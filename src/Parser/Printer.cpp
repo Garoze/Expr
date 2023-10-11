@@ -8,6 +8,7 @@
 #include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
 #include "Parser/Printer.hpp"
+#include "Parser/ProgramExpr.hpp"
 
 auto prefix(int depth, bool last) -> std::string
 {
@@ -70,4 +71,30 @@ auto Printer::visit(const AssignExpr& assign) -> void
     assign.expr()->visit(*this);
 
     m_indent = save_indent;
+}
+
+auto Printer::visit(const ProgramExpr& prog) -> void
+{
+    auto save_last = m_last;
+    auto save_depth = m_depth;
+    auto save_indent = m_indent;
+
+    fmt::print("{}Prog: \n", indent(m_indent, m_depth, m_last));
+
+    for (auto& child : prog.body)
+    {
+        if (m_depth > 0)
+            m_indent += (m_last ? "    " : " │  ");
+
+        m_depth++;
+
+        if (&child == &prog.body.back())
+            m_last = true;
+
+        child->visit(*this);
+
+        m_last = save_last;
+        m_depth = save_depth;
+        m_indent = save_indent;
+    }
 }

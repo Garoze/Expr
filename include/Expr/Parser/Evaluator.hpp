@@ -15,6 +15,7 @@ public:
     auto visit(const BinaryExpr&) -> void override;
     auto visit(const IdentifierExpr&) -> void override;
     auto visit(const AssignExpr&) -> void override;
+    auto visit(const ProgramExpr&) -> void override;
 
     [[nodiscard]] auto value() const -> double;
 

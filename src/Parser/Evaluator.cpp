@@ -5,6 +5,7 @@
 #include "Parser/Evaluator.hpp"
 #include "Parser/IdentifierExpr.hpp"
 #include "Parser/NumberLit.hpp"
+#include "Parser/ProgramExpr.hpp"
 
 auto Evaluator::visit(const NumberLit& lit) -> void
 {
@@ -63,4 +64,12 @@ auto Evaluator::visit(const BinaryExpr& bop) -> void
 auto Evaluator::value() const -> double
 {
     return m_value;
+}
+
+auto Evaluator::visit(const ProgramExpr& prog) -> void
+{
+    for (auto& child : prog.body)
+    {
+        child->visit(*this);
+    }
 }

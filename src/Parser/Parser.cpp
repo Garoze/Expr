@@ -15,6 +15,7 @@
 #include "Parser/NumberLit.hpp"
 #include "Parser/Parser.hpp"
 #include "Parser/Printer.hpp"
+#include "Parser/ProgramExpr.hpp"
 
 Parser::Parser()
     : m_index(0)
@@ -105,19 +106,21 @@ auto Parser::is_empty() const -> bool
 
 auto Parser::Parse(bool debug) -> void
 {
-    Evaluator e;
+    ProgramExpr prog;
+    Printer printer;
+    Evaluator evaluator;
 
-    auto expr = parse_expr();
-
-    if (debug)
+    while (look_ahead()->kind().raw() != kind_t::__EOF)
     {
-        Printer p;
-        expr->visit(p);
+        auto expr = parse_expr();
+        prog.body.push_back(std::move(expr));
     }
 
-    expr->visit(e);
+    if (debug)
+        prog.visit(printer);
 
-    fmt::print("Result: {:.2f}\n", e.value());
+    prog.visit(evaluator);
+    fmt::print("Result: {:.2f}\n", evaluator.value());
 }
 
 auto Parser::parse_expr() -> std::unique_ptr<Expression>
@@ -207,6 +210,12 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
             return expr;
         }
         break;
+
+        case kind_t::__EOF:
+            fmt::print("[parser] - Unfinished expression at position: `{}`\n",
+                       m_index);
+            std::exit(1);
+            break;
 
         default:
         {

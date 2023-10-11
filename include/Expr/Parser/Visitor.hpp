@@ -6,6 +6,7 @@ class NumberLit;
 class BinaryExpr;
 class IdentifierExpr;
 class AssignExpr;
+class ProgramExpr;
 
 class Visitor
 {
@@ -14,4 +15,5 @@ public:
     virtual auto visit(const BinaryExpr&) -> void = 0;
     virtual auto visit(const IdentifierExpr&) -> void = 0;
     virtual auto visit(const AssignExpr&) -> void = 0;
+    virtual auto visit(const ProgramExpr&) -> void = 0;
 };
