@@ -1,23 +1,58 @@
-expression = 
-    term 
-    | { '+' | '-' term } + 
+program 
+    : expr+
     ;
 
-term = 
-    factor 
-    | { '*' | '/' term } +
+expr 
+    : term 
+    | expr '+' term
+    | expr '-' term
     ;
 
-factor = 
-    NUMBERLIT
-    | IDENTIFIER
-    | '(' expression ')'
+term 
+    : factor
+    | term '*' factor 
+    | term '/' factor
     ;
 
-NUMBERLIT = 
-    | { 0..9 }+
+factor 
+    : id
+    | assign_expr
+    | number_lit
+    | paren_expr
     ;
 
-IDENTIFIER = 
-    | { a..z A..Z 0..9 '_' } +
-    ; 
+id
+    : IDENTIFIER
+    ;
+
+assign_expr
+    : id '=' expr ';'
+    ;
+
+number_lit
+    : NUMBER
+    ;
+
+paren_expr
+    : '(' expr ')'
+    ;
+
+IDENTIFIER
+    : ( LETTER | UNDERSCORE ), { LETTER | NUMBER | UNDERSCORE }
+    ;
+
+NUMBER 
+    : DIGIT+
+    ;
+
+LETTER 
+    : ( a-z | A-Z )
+    ;
+
+DIGIT 
+    : 0-9
+    ;
+
+UNDESCORE 
+    : '_'
+    ;
