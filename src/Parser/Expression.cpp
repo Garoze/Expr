@@ -1,10 +1,10 @@
 #include "Parser/Expression.hpp"
 
 Expression::Expression()
-    : Node{ AST_kind::NumberLit }
+    : Node{ Kind::NumberLiteral }
 {}
 
-Expression::Expression(AST_kind kind)
+Expression::Expression(Kind kind)
     : Node{ kind }
 {}
 

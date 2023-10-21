@@ -4,17 +4,18 @@
 
 #include "Parser/Visitor.hpp"
 
-class NumberLit;
-class BinaryExpr;
+class NumberLiteral;
+class BinaryExpression;
 class Expression;
+class AssignExpression;
 
 class Evaluator : public Visitor
 {
 public:
-    auto visit(const NumberLit&) -> void override;
-    auto visit(const BinaryExpr&) -> void override;
+    auto visit(const NumberLiteral&) -> void override;
+    auto visit(const BinaryExpression&) -> void override;
     auto visit(const IdentifierExpr&) -> void override;
-    auto visit(const AssignExpr&) -> void override;
+    auto visit(const AssignExpression&) -> void override;
     auto visit(const ProgramExpr&) -> void override;
 
     [[nodiscard]] auto value() const -> double;

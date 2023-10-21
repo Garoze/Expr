@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <span>
 #include <vector>
 
@@ -13,5 +12,5 @@ public:
 
     auto visit(Visitor&) -> void override;
 
-    std::vector<std::unique_ptr<Expression>> body;
+    std::vector<Expr> body;
 };

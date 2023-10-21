@@ -2,14 +2,17 @@
 
 #include "Parser/Expression.hpp"
 
-class NumberLit : public Expression
+class NumberLiteral : public Expression
 {
 public:
-    NumberLit(double);
+    NumberLiteral(double);
 
     auto visit(Visitor&) -> void override;
 
-    [[nodiscard]] auto value() const -> double;
+    [[nodiscard]] auto value() const
+    {
+        return m_value;
+    }
 
 private:
     double m_value;

@@ -25,12 +25,12 @@ auto indent(std::string indent, int depth, bool last) -> std::string
     return fmt::format("{}{}", indent, prefix(depth, last));
 }
 
-auto Printer::visit(const NumberLit& num) -> void
+auto Printer::visit(const NumberLiteral& num) -> void
 {
     fmt::print("{}Lit: {}\n", indent(m_indent, m_depth, m_last), num.value());
 }
 
-auto Printer::visit(const BinaryExpr& expr) -> void
+auto Printer::visit(const BinaryExpression& expr) -> void
 {
     auto save_indent = m_indent;
 
@@ -55,7 +55,7 @@ auto Printer::visit(const IdentifierExpr& id) -> void
     fmt::print("{}Id: {}\n", indent(m_indent, m_depth, m_last), id.name());
 }
 
-auto Printer::visit(const AssignExpr& assign) -> void
+auto Printer::visit(const AssignExpression& assign) -> void
 {
     auto save_indent = m_indent;
 

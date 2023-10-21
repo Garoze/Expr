@@ -11,7 +11,10 @@ public:
 
     auto visit(Visitor&) -> void override;
 
-    [[nodiscard]] auto name() const -> std::string;
+    [[nodiscard]] auto name() const
+    {
+        return m_name;
+    }
 
 private:
     std::string m_name;

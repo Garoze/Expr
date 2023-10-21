@@ -134,7 +134,7 @@ auto Parser::parse_expr() -> std::unique_ptr<Expression>
         step();
         auto rhs = parse_term();
 
-        lhs = std::make_unique<BinaryExpr>(
+        lhs = std::make_unique<BinaryExpression>(
             std::move(lhs), std::move(rhs),
             std::get<std::string>(op.value().raw()));
     }
@@ -153,7 +153,7 @@ auto Parser::parse_term() -> std::unique_ptr<Expression>
         step();
         auto rhs = parse_term();
 
-        lhs = std::make_unique<BinaryExpr>(
+        lhs = std::make_unique<BinaryExpression>(
             std::move(lhs), std::move(rhs),
             std::get<std::string>(op.value().raw()));
     }
@@ -169,7 +169,7 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
         {
             auto token = expect(kind_t::NUMBERLIT).value();
 
-            return std::make_unique<NumberLit>(
+            return std::make_unique<NumberLiteral>(
                 std::get<double>(token.value().raw()));
         }
         break;
@@ -189,8 +189,8 @@ auto Parser::parse_factor() -> std::unique_ptr<Expression>
                     auto expr = parse_expr();
                     match(kind_t::SEMI);
 
-                    return std::make_unique<AssignExpr>(std::move(identifier),
-                                                        std::move(expr));
+                    return std::make_unique<AssignExpression>(
+                        std::move(expr), std::move(identifier));
                 }
                 break;
 

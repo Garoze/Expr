@@ -1,10 +1,10 @@
 #include "Parser/Node.hpp"
 
-Node::Node(AST_kind kind)
+Node::Node(Kind kind)
     : m_kind(kind)
 {}
 
-auto Node::kind() const -> AST_kind
+auto Node::kind() const -> Kind
 {
     return m_kind;
 }

@@ -2,7 +2,7 @@
 #include <vector>
 
 ProgramExpr::ProgramExpr()
-    : Expression{ AST_kind::ProgramExpr }
+    : Expression{ Kind::ProgramExpression }
 {}
 
 auto ProgramExpr::visit(Visitor& visitor) -> void

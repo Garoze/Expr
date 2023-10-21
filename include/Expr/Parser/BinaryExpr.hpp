@@ -4,20 +4,30 @@
 
 #include "Parser/Expression.hpp"
 
-class BinaryExpr : public Expression
+class BinaryExpression : public Expression
 {
 public:
-    BinaryExpr(std::unique_ptr<Expression>, std::unique_ptr<Expression>,
-               std::string);
+    BinaryExpression(Expr, Expr, std::string);
 
     auto visit(Visitor&) -> void override;
 
-    [[nodiscard]] auto op() const -> std::string;
-    [[nodiscard]] auto lhs() const -> Expression*;
-    [[nodiscard]] auto rhs() const -> Expression*;
+    [[nodiscard]] auto op() const
+    {
+        return m_op;
+    }
+
+    [[nodiscard]] auto lhs() const
+    {
+        return m_lhs.get();
+    }
+
+    [[nodiscard]] auto rhs() const
+    {
+        return m_rhs.get();
+    }
 
 private:
+    Expr m_lhs;
+    Expr m_rhs;
     std::string m_op;
-    std::unique_ptr<Expression> m_lhs;
-    std::unique_ptr<Expression> m_rhs;
 };

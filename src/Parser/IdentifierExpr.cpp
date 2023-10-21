@@ -1,14 +1,9 @@
 #include "Parser/IdentifierExpr.hpp"
 
 IdentifierExpr::IdentifierExpr(std::string name)
-    : Expression{ AST_kind::IdentifierExpr }
+    : Expression{ Kind::Identifier }
     , m_name(name)
 {}
-
-auto IdentifierExpr::name() const -> std::string
-{
-    return m_name;
-}
 
 auto IdentifierExpr::visit(Visitor& visitor) -> void
 {

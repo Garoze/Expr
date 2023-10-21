@@ -1,16 +1,11 @@
 #include "Parser/NumberLit.hpp"
 
-NumberLit::NumberLit(double value)
-    : Expression{ AST_kind::NumberLit }
+NumberLiteral::NumberLiteral(double value)
+    : Expression{ Kind::NumberLiteral }
     , m_value(value)
 {}
 
-auto NumberLit::value() const -> double
-{
-    return m_value;
-}
-
-auto NumberLit::visit(Visitor& visitor) -> void
+auto NumberLiteral::visit(Visitor& visitor) -> void
 {
     visitor.visit(*this);
 }

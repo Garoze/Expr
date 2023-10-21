@@ -4,17 +4,24 @@
 
 #include "Parser/IdentifierExpr.hpp"
 
-class AssignExpr : public Expression
+class AssignExpression : public Expression
 {
 public:
-    AssignExpr(std::unique_ptr<IdentifierExpr>, std::unique_ptr<Expression>);
+    AssignExpression(Expr, Identifier);
 
     auto visit(Visitor&) -> void override;
 
-    [[nodiscard]] auto identifier() const -> IdentifierExpr*;
-    [[nodiscard]] auto expr() const -> Expression*;
+    [[nodiscard]] auto identifier() const
+    {
+        return m_identifier.get();
+    }
+
+    [[nodiscard]] auto expr() const
+    {
+        return m_expr.get();
+    }
 
 private:
-    std::unique_ptr<IdentifierExpr> m_identifer;
-    std::unique_ptr<Expression> m_expr;
+    Expr m_expr;
+    Identifier m_identifier;
 };

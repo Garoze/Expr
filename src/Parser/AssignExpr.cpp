@@ -2,24 +2,13 @@
 
 #include "Parser/AssignExpr.hpp"
 
-AssignExpr::AssignExpr(std::unique_ptr<IdentifierExpr> identifier,
-                       std::unique_ptr<Expression> expr)
-    : Expression{ AST_kind::AssignExpr }
-    , m_identifer(std::move(identifier))
+AssignExpression::AssignExpression(Expr expr, Identifier identifier)
+    : Expression{ Kind::AssignExpression }
     , m_expr(std::move(expr))
+    , m_identifier(std::move(identifier))
 {}
 
-auto AssignExpr::identifier() const -> IdentifierExpr*
-{
-    return m_identifer.get();
-}
-
-auto AssignExpr::expr() const -> Expression*
-{
-    return m_expr.get();
-}
-
-auto AssignExpr::visit(Visitor& visitor) -> void
+auto AssignExpression::visit(Visitor& visitor) -> void
 {
     visitor.visit(*this);
 }

@@ -7,7 +7,7 @@
 #include "Parser/NumberLit.hpp"
 #include "Parser/ProgramExpr.hpp"
 
-auto Evaluator::visit(const NumberLit& lit) -> void
+auto Evaluator::visit(const NumberLiteral& lit) -> void
 {
     m_value = lit.value();
 }
@@ -26,14 +26,14 @@ auto Evaluator::visit(const IdentifierExpr& identifier) -> void
     }
 }
 
-auto Evaluator::visit(const AssignExpr& assign) -> void
+auto Evaluator::visit(const AssignExpression& assign) -> void
 {
     assign.expr()->visit(*this);
 
     m_symbol_table[assign.identifier()->name()] = m_value;
 }
 
-auto Evaluator::visit(const BinaryExpr& bop) -> void
+auto Evaluator::visit(const BinaryExpression& bop) -> void
 {
     bop.lhs()->visit(*this);
     auto lhs = m_value;
